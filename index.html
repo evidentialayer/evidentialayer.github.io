@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidentia</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;
+  --fg:#e8e6e1;
+  --accent:#6ee7b7;
+  --accent2:#f59e0b;
+  --danger:#ef4444;
+  --muted:rgba(255,255,255,.35);
+  --glass:rgba(255,255,255,.04);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* Grain overlay */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:128px 128px;
+  opacity:.5;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.5rem 3rem;
+  background:rgba(10,10,15,.7);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.logo{
+  font-family:'Instrument Serif',serif;
+  font-size:1.6rem;letter-spacing:-.02em;
+  color:var(--fg);
+}
+.logo span{color:var(--accent);font-style:italic}
+.nav-cta{
+  padding:.6rem 1.6rem;border:1px solid var(--accent);
+  color:var(--accent);border-radius:100px;font-size:.85rem;
+  text-decoration:none;letter-spacing:.04em;font-weight:500;
+  transition:all .3s;
+}
+.nav-cta:hover{background:var(--accent);color:var(--bg)}
+
+/* HERO */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:8rem 2rem 4rem;position:relative;
+}
+.hero-eyebrow{
+  font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.5rem;font-weight:500;
+  opacity:0;animation:fadeUp .8s .3s forwards;
+}
+.hero h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2.8rem,7vw,5.5rem);
+  line-height:1.08;max-width:14ch;
+  letter-spacing:-.03em;font-weight:400;
+  opacity:0;animation:fadeUp .8s .5s forwards;
+}
+.hero h1 em{
+  font-style:italic;color:var(--accent);
+}
+.hero-sub{
+  margin-top:1.8rem;font-size:clamp(1rem,2vw,1.25rem);
+  color:var(--muted);max-width:38ch;line-height:1.6;
+  font-weight:300;
+  opacity:0;animation:fadeUp .8s .7s forwards;
+}
+
+/* CANVAS */
+#nn-canvas{
+  width:100%;max-width:900px;height:420px;
+  margin:3.5rem auto 0;
+  opacity:0;animation:fadeUp 1s .9s forwards;
+}
+
+/* TAGLINE STRIP */
+.strip{
+  padding:5rem 2rem;text-align:center;
+  border-top:1px solid rgba(255,255,255,.05);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.strip-q{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(1.4rem,3.5vw,2.4rem);
+  max-width:26ch;margin:0 auto;line-height:1.3;
+  font-weight:400;letter-spacing:-.02em;
+}
+.strip-q span{color:var(--accent2)}
+
+/* PILLARS */
+.pillars{
+  padding:6rem 2rem;display:flex;flex-wrap:wrap;
+  justify-content:center;gap:2rem;max-width:1100px;margin:0 auto;
+}
+.pillar{
+  flex:1 1 240px;max-width:320px;
+  background:var(--glass);border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;padding:2.2rem 2rem;
+  transition:border-color .3s;
+}
+.pillar:hover{border-color:rgba(110,231,183,.25)}
+.pillar-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;margin-bottom:1.2rem;
+}
+.pillar h3{
+  font-family:'Instrument Serif',serif;
+  font-size:1.35rem;margin-bottom:.7rem;font-weight:400;
+}
+.pillar p{color:var(--muted);font-size:.9rem;line-height:1.65;font-weight:300}
+
+/* TRUST QUOTE */
+.trust{
+  padding:6rem 2rem;text-align:center;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.trust-phrase{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2rem,5vw,4rem);font-weight:400;
+  letter-spacing:-.03em;
+}
+.trust-phrase em{font-style:italic;color:var(--accent2)}
+.trust-sub{
+  margin-top:1.2rem;font-size:1rem;color:var(--muted);font-weight:300;
+}
+
+/* CTA */
+.cta-section{
+  padding:5rem 2rem 6rem;text-align:center;
+}
+.cta-btn{
+  display:inline-block;padding:1rem 3rem;
+  background:var(--accent);color:var(--bg);
+  font-size:1rem;font-weight:600;border-radius:100px;
+  text-decoration:none;letter-spacing:.02em;
+  transition:transform .3s,box-shadow .3s;
+}
+.cta-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 40px rgba(110,231,183,.25);
+}
+.cta-note{
+  margin-top:1rem;font-size:.8rem;color:var(--muted);font-weight:300;
+}
+
+/* FOOTER */
+footer{
+  padding:2rem 3rem;border-top:1px solid rgba(255,255,255,.05);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.78rem;color:rgba(255,255,255,.2);
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@media(max-width:600px){
+  nav{padding:1rem 1.5rem}
+  .pillars{flex-direction:column;align-items:center}
+  #nn-canvas{height:300px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">evidentia<span>.</span></div>
+  <a href="#early-access" class="nav-cta">Get Early Access</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Scientific AI Evaluation</div>
+  <h1>Who verifies the <em>science</em> behind the answer?</h1>
+  <p class="hero-sub">AI models generate confident claims. We measure whether those claims survive scrutiny.</p>
+  <canvas id="nn-canvas"></canvas>
+</section>
+
+<section class="strip">
+  <p class="strip-q">Who guarantees the results you see in your favorite LLM are <span>accurate and up-to-date</span>?</p>
+</section>
+
+<section class="pillars">
+  <div class="pillar">
+    <div class="pillar-icon">🔬</div>
+    <h3>Evaluate Reasoning</h3>
+    <p>Structured expert assessment of whether AI models reason correctly under real scientific complexity.</p>
+  </div>
+  <div class="pillar">
+    <div class="pillar-icon">⚡</div>
+    <h3>Stress-Test Robustness</h3>
+    <p>Adversarial evaluation that reveals how models behave when premises are flawed and evidence conflicts.</p>
+  </div>
+  <div class="pillar">
+    <div class="pillar-icon">📋</div>
+    <h3>Audit-Grade Traceability</h3>
+    <p>Every score versioned, every evaluator credentialed, every result reproducible.</p>
+  </div>
+</section>
+
+<section class="trust">
+  <p class="trust-phrase">Trust, but <em>verify.</em></p>
+  <p class="trust-sub">Independent. Rigorous. Built for the era of AI in science.</p>
+</section>
+
+<section class="cta-section" id="early-access">
+  <a href="mailto:hello@evidentia.ai" class="cta-btn">Request Early Access</a>
+  <p class="cta-note">Launching 2026 — limited pilot partnerships available</p>
+</section>
+
+<footer>
+  <span>© 2026 Evidentia</span>
+  <span>Lisbon · EU</span>
+</footer>
+
+<script>
+const canvas = document.getElementById('nn-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, dpr;
+const LAYERS = [3, 5, 7, 5, 3, 1];
+let nodes = [];
+let edges = [];
+let time = 0;
+let analysisPulse = { layer: -1, progress: 0, active: false, cooldown: 0 };
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  W = rect.width; H = rect.height;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  buildNetwork();
+}
+
+function buildNetwork() {
+  nodes = []; edges = [];
+  const padX = 80, padY = 50;
+  const usableW = W - padX * 2;
+  const usableH = H - padY * 2;
+  const layerSpacing = usableW / (LAYERS.length - 1);
+
+  LAYERS.forEach((count, li) => {
+    const x = padX + li * layerSpacing;
+    const nodeSpacing = usableH / (count + 1);
+    for (let ni = 0; ni < count; ni++) {
+      const y = padY + nodeSpacing * (ni + 1);
+      nodes.push({
+        x, y, li, ni,
+        baseColor: [110, 231, 183],
+        color: [110, 231, 183],
+        alpha: .6,
+        radius: li === LAYERS.length - 1 ? 10 : 6,
+        analyzed: false,
+        analyzeTime: 0,
+      });
+    }
+  });
+
+  // edges between consecutive layers
+  for (let li = 0; li < LAYERS.length - 1; li++) {
+    const from = nodes.filter(n => n.li === li);
+    const to = nodes.filter(n => n.li === li + 1);
+    from.forEach(f => to.forEach(t => {
+      edges.push({ from: f, to: t, alpha: .08 + Math.random() * .06 });
+    }));
+  }
+}
+
+function triggerAnalysis() {
+  analysisPulse.active = true;
+  analysisPulse.layer = 0;
+  analysisPulse.progress = 0;
+  // reset all nodes
+  nodes.forEach(n => { n.analyzed = false; n.analyzeTime = 0; });
+}
+
+function lerpColor(a, b, t) {
+  return [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+  ];
+}
+
+function draw() {
+  time += 0.016;
+  ctx.clearRect(0, 0, W, H);
+
+  // Analysis pulse logic
+  if (analysisPulse.active) {
+    analysisPulse.progress += 0.025;
+    if (analysisPulse.progress >= 1) {
+      // Mark current layer analyzed
+      const li = analysisPulse.layer;
+      nodes.filter(n => n.li === li).forEach(n => {
+        n.analyzed = true;
+        n.analyzeTime = time;
+        // Randomly assign: green (pass), amber (uncertain), red (fail)
+        const r = Math.random();
+        if (r < .55) n.color = [110, 231, 183]; // green
+        else if (r < .85) n.color = [245, 158, 11]; // amber
+        else n.color = [239, 68, 68]; // red
+      });
+      analysisPulse.layer++;
+      analysisPulse.progress = 0;
+      if (analysisPulse.layer >= LAYERS.length) {
+        analysisPulse.active = false;
+        analysisPulse.cooldown = time;
+        // Color final node based on majority
+        const analyzed = nodes.filter(n => n.analyzed && n.li < LAYERS.length - 1);
+        const reds = analyzed.filter(n => n.color[0] > 200).length;
+        const ambers = analyzed.filter(n => n.color[1] > 150 && n.color[0] > 200).length;
+        const finalNode = nodes.find(n => n.li === LAYERS.length - 1);
+        if (finalNode) {
+          finalNode.analyzed = true;
+          finalNode.analyzeTime = time;
+          if (reds > analyzed.length * .3) finalNode.color = [239, 68, 68];
+          else if (reds + ambers > analyzed.length * .4) finalNode.color = [245, 158, 11];
+          else finalNode.color = [110, 231, 183];
+        }
+      }
+    }
+  }
+
+  // Reset after cooldown
+  if (!analysisPulse.active && analysisPulse.cooldown > 0 && time - analysisPulse.cooldown > 3) {
+    analysisPulse.cooldown = 0;
+    triggerAnalysis();
+  }
+
+  // Draw edges
+  edges.forEach(e => {
+    const pulse = analysisPulse.active && e.from.li === analysisPulse.layer;
+    const ea = pulse ? .25 : e.alpha;
+    ctx.beginPath();
+    ctx.moveTo(e.from.x, e.from.y);
+    // Slight curve
+    const mx = (e.from.x + e.to.x) / 2;
+    const my = (e.from.y + e.to.y) / 2 + (e.from.ni - e.to.ni) * 3;
+    ctx.quadraticCurveTo(mx, my, e.to.x, e.to.y);
+    
+    if (e.from.analyzed) {
+      const c = e.from.color;
+      ctx.strokeStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${ea * 1.5})`;
+    } else {
+      ctx.strokeStyle = `rgba(110,231,183,${ea})`;
+    }
+    ctx.lineWidth = pulse ? 1.5 : .8;
+    ctx.stroke();
+  });
+
+  // Draw nodes
+  nodes.forEach(n => {
+    const breathing = Math.sin(time * 1.5 + n.ni * .7 + n.li * 1.2) * .15;
+    const isBeingAnalyzed = analysisPulse.active && n.li === analysisPulse.layer;
+    const r = n.radius + (isBeingAnalyzed ? 3 * Math.sin(time * 8) : 0);
+    
+    let col = n.analyzed ? n.color : n.baseColor;
+    let alpha = n.analyzed ? .9 : (.5 + breathing);
+
+    if (isBeingAnalyzed) {
+      // Flicker between white and base
+      const flick = Math.sin(time * 12) * .5 + .5;
+      col = lerpColor(n.baseColor, [255, 255, 255], flick);
+      alpha = 1;
+    }
+
+    // Glow
+    const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 4);
+    glow.addColorStop(0, `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha * .3})`);
+    glow.addColorStop(1, `rgba(${col[0]|0},${col[1]|0},${col[2]|0},0)`);
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r * 4, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    // Core
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha})`;
+    ctx.fill();
+
+    // Ring on analyzed
+    if (n.analyzed) {
+      const ringAlpha = Math.max(0, 1 - (time - n.analyzeTime) * .5);
+      if (ringAlpha > 0) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r + 6 + (time - n.analyzeTime) * 12, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${ringAlpha * .4})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+  });
+
+  // Scanning line
+  if (analysisPulse.active) {
+    const li = analysisPulse.layer;
+    const layerNodes = nodes.filter(n => n.li === li);
+    if (layerNodes.length) {
+      const x = layerNodes[0].x;
+      const grad = ctx.createLinearGradient(x, 0, x, H);
+      const p = analysisPulse.progress;
+      grad.addColorStop(Math.max(0, p - .15), 'rgba(110,231,183,0)');
+      grad.addColorStop(p, 'rgba(110,231,183,.25)');
+      grad.addColorStop(Math.min(1, p + .15), 'rgba(110,231,183,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x - 20, 0, 40, H);
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+window.addEventListener('resize', resize);
+resize();
+triggerAnalysis();
+draw();
+</script>
+</body>
+</html>
