@@ -5,17 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Evidentia</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>
+(function(){
+  var saved = localStorage.getItem('theme');
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var theme = saved || (prefersDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
+/* ── Light mode (default) ── */
 :root{
-  --bg:#0a0a0f;
-  --fg:#e8e6e1;
-  --accent:#6ee7b7;
-  --accent2:#f59e0b;
-  --danger:#ef4444;
-  --muted:rgba(255,255,255,.35);
-  --glass:rgba(255,255,255,.04);
+  --bg:#EDE8E0;
+  --fg:#2A1B3D;
+  --accent:#0D8C8C;
+  --accent2:#C4873B;
+  --danger:#B84A3C;
+  --muted:#8A8170;
+  --border-color:#DDD6C7;
+  --glass:rgba(42,27,61,.04);
+  --nav-bg:rgba(237,232,224,.8);
+  --nav-border:rgba(221,214,199,.5);
+  --grain-opacity:.35;
+  --pillar-hover:rgba(13,140,140,.18);
+  --cta-shadow:rgba(13,140,140,.25);
 }
+
+/* ── Dark mode ── */
+[data-theme="dark"]{
+  --bg:#141316;
+  --fg:#E8E6E1;
+  --accent:#0D8C8C;
+  --accent2:#C4873B;
+  --danger:#B84A3C;
+  --muted:#9E978A;
+  --border-color:rgba(255,255,255,.08);
+  --glass:rgba(255,255,255,.04);
+  --nav-bg:rgba(20,19,22,.8);
+  --nav-border:rgba(255,255,255,.05);
+  --grain-opacity:.5;
+  --pillar-hover:rgba(13,140,140,.2);
+  --cta-shadow:rgba(13,140,140,.3);
+}
+
 html{scroll-behavior:smooth}
 body{
   background:var(--bg);
@@ -23,6 +57,7 @@ body{
   font-family:'DM Sans',sans-serif;
   overflow-x:hidden;
   min-height:100vh;
+  transition:background .4s,color .4s;
 }
 
 /* Grain overlay */
@@ -30,7 +65,7 @@ body::after{
   content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
   background-size:128px 128px;
-  opacity:.5;
+  opacity:var(--grain-opacity);
 }
 
 /* NAV */
@@ -38,16 +73,34 @@ nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;justify-content:space-between;align-items:center;
   padding:1.5rem 3rem;
-  background:rgba(10,10,15,.7);
+  background:var(--nav-bg);
   backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255,255,255,.05);
+  border-bottom:1px solid var(--nav-border);
+  transition:background .4s,border-color .4s;
 }
-.logo{
-  font-family:'Instrument Serif',serif;
-  font-size:1.6rem;letter-spacing:-.02em;
-  color:var(--fg);
+.nav-left{display:flex;align-items:center;gap:1rem}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.logo img{
+  height:28px;
+  width:auto;
+  display:block;
 }
-.logo span{color:var(--accent);font-style:italic}
+[data-theme="dark"] .logo img{
+  filter:brightness(0) invert(1);
+}
+.theme-toggle{
+  background:none;border:1px solid var(--border-color);
+  color:var(--fg);cursor:pointer;
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;line-height:1;
+  transition:border-color .3s,color .3s;
+}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon{display:none}
+[data-theme="light"] .theme-toggle .icon-sun{display:block}
+[data-theme="dark"] .theme-toggle .icon-moon{display:block}
 .nav-cta{
   padding:.6rem 1.6rem;border:1px solid var(--accent);
   color:var(--accent);border-radius:100px;font-size:.85rem;
@@ -94,8 +147,8 @@ nav{
 /* TAGLINE STRIP */
 .strip{
   padding:5rem 2rem;text-align:center;
-  border-top:1px solid rgba(255,255,255,.05);
-  border-bottom:1px solid rgba(255,255,255,.05);
+  border-top:1px solid var(--border-color);
+  border-bottom:1px solid var(--border-color);
 }
 .strip-q{
   font-family:'Instrument Serif',serif;
@@ -112,11 +165,11 @@ nav{
 }
 .pillar{
   flex:1 1 240px;max-width:320px;
-  background:var(--glass);border:1px solid rgba(255,255,255,.06);
+  background:var(--glass);border:1px solid var(--border-color);
   border-radius:16px;padding:2.2rem 2rem;
-  transition:border-color .3s;
+  transition:border-color .3s,background .3s;
 }
-.pillar:hover{border-color:rgba(110,231,183,.25)}
+.pillar:hover{border-color:var(--accent);background:var(--pillar-hover)}
 .pillar-icon{
   width:36px;height:36px;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
@@ -131,7 +184,7 @@ nav{
 /* TRUST QUOTE */
 .trust{
   padding:6rem 2rem;text-align:center;
-  border-top:1px solid rgba(255,255,255,.05);
+  border-top:1px solid var(--border-color);
 }
 .trust-phrase{
   font-family:'Instrument Serif',serif;
@@ -152,11 +205,11 @@ nav{
   background:var(--accent);color:var(--bg);
   font-size:1rem;font-weight:600;border-radius:100px;
   text-decoration:none;letter-spacing:.02em;
-  transition:transform .3s,box-shadow .3s;
+  transition:transform .3s,box-shadow .3s,color .3s,background .3s;
 }
 .cta-btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 0 40px rgba(110,231,183,.25);
+  box-shadow:0 0 40px var(--cta-shadow);
 }
 .cta-note{
   margin-top:1rem;font-size:.8rem;color:var(--muted);font-weight:300;
@@ -180,9 +233,9 @@ nav{
 
 /* FOOTER */
 footer{
-  padding:2rem 3rem;border-top:1px solid rgba(255,255,255,.05);
+  padding:2rem 3rem;border-top:1px solid var(--border-color);
   display:flex;justify-content:space-between;align-items:center;
-  font-size:.78rem;color:rgba(255,255,255,.2);
+  font-size:.78rem;color:var(--muted);
 }
 
 @keyframes fadeUp{
@@ -200,8 +253,16 @@ footer{
 <body>
 
 <nav>
-  <div class="logo">evidentia<span>.</span></div>
-  <a href="#early-access" class="nav-cta">Get Early Access</a>
+  <div class="nav-left">
+    <a href="/" class="logo"><img src="logo.svg" alt="Evidentia Labs"></a>
+  </div>
+  <div class="nav-right">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+      <span class="icon-sun">&#9788;</span>
+      <span class="icon-moon">&#9790;</span>
+    </button>
+    <a href="#early-access" class="nav-cta">Get Early Access</a>
+  </div>
 </nav>
 
 <section class="hero">
@@ -217,17 +278,17 @@ footer{
 
 <section class="pillars">
   <div class="pillar">
-    <div class="pillar-icon">🔬</div>
+    <div class="pillar-icon">&#128300;</div>
     <h3>Evaluate Reasoning</h3>
     <p>Structured expert assessment of whether AI models reason correctly under real scientific complexity.</p>
   </div>
   <div class="pillar">
-    <div class="pillar-icon">⚡</div>
+    <div class="pillar-icon">&#9889;</div>
     <h3>Stress-Test Robustness</h3>
     <p>Adversarial evaluation that reveals how models behave when premises are flawed and evidence conflicts.</p>
   </div>
   <div class="pillar">
-    <div class="pillar-icon">📋</div>
+    <div class="pillar-icon">&#128203;</div>
     <h3>Audit-Grade Traceability</h3>
     <p>Every score versioned, every evaluator credentialed, every result reproducible.</p>
   </div>
@@ -246,11 +307,30 @@ footer{
 </section>
 
 <footer>
-  <span>© 2026 Evidentia</span>
-  <span>Lisbon · EU</span>
+  <span>&copy; 2026 Evidentia</span>
+  <span>Lisbon &middot; EU</span>
 </footer>
 
 <script>
+/* ── Theme toggle ── */
+(function(){
+  var toggle = document.getElementById('theme-toggle');
+  function getTheme(){
+    return document.documentElement.getAttribute('data-theme');
+  }
+  toggle.addEventListener('click', function(){
+    var next = getTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+    if(!localStorage.getItem('theme')){
+      document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+    }
+  });
+})();
+
+/* ── Neural network canvas ── */
 const canvas = document.getElementById('nn-canvas');
 const ctx = canvas.getContext('2d');
 let W, H, dpr;
@@ -259,6 +339,12 @@ let nodes = [];
 let edges = [];
 let time = 0;
 let analysisPulse = { layer: -1, progress: 0, active: false, cooldown: 0 };
+
+const COLORS = {
+  primary: [13, 140, 140],
+  caution: [196, 135, 59],
+  failure: [184, 74, 60],
+};
 
 function resize() {
   dpr = window.devicePixelRatio || 1;
@@ -283,8 +369,8 @@ function buildNetwork() {
       const y = padY + nodeSpacing * (ni + 1);
       nodes.push({
         x, y, li, ni,
-        baseColor: [110, 231, 183],
-        color: [110, 231, 183],
+        baseColor: COLORS.primary,
+        color: COLORS.primary,
         alpha: .6,
         radius: li === LAYERS.length - 1 ? 10 : 6,
         analyzed: false,
@@ -293,7 +379,6 @@ function buildNetwork() {
     }
   });
 
-  // edges between consecutive layers
   for (let li = 0; li < LAYERS.length - 1; li++) {
     const from = nodes.filter(n => n.li === li);
     const to = nodes.filter(n => n.li === li + 1);
@@ -307,7 +392,6 @@ function triggerAnalysis() {
   analysisPulse.active = true;
   analysisPulse.layer = 0;
   analysisPulse.progress = 0;
-  // reset all nodes
   nodes.forEach(n => { n.analyzed = false; n.analyzeTime = 0; });
 }
 
@@ -323,43 +407,38 @@ function draw() {
   time += 0.016;
   ctx.clearRect(0, 0, W, H);
 
-  // Analysis pulse logic
   if (analysisPulse.active) {
     analysisPulse.progress += 0.025;
     if (analysisPulse.progress >= 1) {
-      // Mark current layer analyzed
       const li = analysisPulse.layer;
       nodes.filter(n => n.li === li).forEach(n => {
         n.analyzed = true;
         n.analyzeTime = time;
-        // Randomly assign: green (pass), amber (uncertain), red (fail)
         const r = Math.random();
-        if (r < .55) n.color = [110, 231, 183]; // green
-        else if (r < .85) n.color = [245, 158, 11]; // amber
-        else n.color = [239, 68, 68]; // red
+        if (r < .55) n.color = COLORS.primary;
+        else if (r < .85) n.color = COLORS.caution;
+        else n.color = COLORS.failure;
       });
       analysisPulse.layer++;
       analysisPulse.progress = 0;
       if (analysisPulse.layer >= LAYERS.length) {
         analysisPulse.active = false;
         analysisPulse.cooldown = time;
-        // Color final node based on majority
         const analyzed = nodes.filter(n => n.analyzed && n.li < LAYERS.length - 1);
-        const reds = analyzed.filter(n => n.color[0] > 200).length;
-        const ambers = analyzed.filter(n => n.color[1] > 150 && n.color[0] > 200).length;
+        const reds = analyzed.filter(n => n.color[0] > 150 && n.color[1] < 100).length;
+        const ambers = analyzed.filter(n => n.color[1] > 120 && n.color[0] > 150).length;
         const finalNode = nodes.find(n => n.li === LAYERS.length - 1);
         if (finalNode) {
           finalNode.analyzed = true;
           finalNode.analyzeTime = time;
-          if (reds > analyzed.length * .3) finalNode.color = [239, 68, 68];
-          else if (reds + ambers > analyzed.length * .4) finalNode.color = [245, 158, 11];
-          else finalNode.color = [110, 231, 183];
+          if (reds > analyzed.length * .3) finalNode.color = COLORS.failure;
+          else if (reds + ambers > analyzed.length * .4) finalNode.color = COLORS.caution;
+          else finalNode.color = COLORS.primary;
         }
       }
     }
   }
 
-  // Reset after cooldown
   if (!analysisPulse.active && analysisPulse.cooldown > 0 && time - analysisPulse.cooldown > 3) {
     analysisPulse.cooldown = 0;
     triggerAnalysis();
@@ -371,18 +450,17 @@ function draw() {
     const ea = pulse ? .25 : e.alpha;
     ctx.beginPath();
     ctx.moveTo(e.from.x, e.from.y);
-    // Slight curve
     const mx = (e.from.x + e.to.x) / 2;
     const my = (e.from.y + e.to.y) / 2 + (e.from.ni - e.to.ni) * 3;
     ctx.quadraticCurveTo(mx, my, e.to.x, e.to.y);
-    
+
     if (e.from.analyzed) {
       const c = e.from.color;
       ctx.strokeStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${ea * 1.5})`;
     } else {
-      ctx.strokeStyle = `rgba(110,231,183,${ea})`;
+      ctx.strokeStyle = `rgba(${COLORS.primary[0]},${COLORS.primary[1]},${COLORS.primary[2]},${ea})`;
     }
-    ctx.lineWidth = pulse ? 1.5 : .8;
+    ctx.lineWidth = pulse ? 2.5 : 1.5;
     ctx.stroke();
   });
 
@@ -391,12 +469,11 @@ function draw() {
     const breathing = Math.sin(time * 1.5 + n.ni * .7 + n.li * 1.2) * .15;
     const isBeingAnalyzed = analysisPulse.active && n.li === analysisPulse.layer;
     const r = n.radius + (isBeingAnalyzed ? 3 * Math.sin(time * 8) : 0);
-    
+
     let col = n.analyzed ? n.color : n.baseColor;
     let alpha = n.analyzed ? .9 : (.5 + breathing);
 
     if (isBeingAnalyzed) {
-      // Flicker between white and base
       const flick = Math.sin(time * 12) * .5 + .5;
       col = lerpColor(n.baseColor, [255, 255, 255], flick);
       alpha = 1;
@@ -438,9 +515,10 @@ function draw() {
       const x = layerNodes[0].x;
       const grad = ctx.createLinearGradient(x, 0, x, H);
       const p = analysisPulse.progress;
-      grad.addColorStop(Math.max(0, p - .15), 'rgba(110,231,183,0)');
-      grad.addColorStop(p, 'rgba(110,231,183,.25)');
-      grad.addColorStop(Math.min(1, p + .15), 'rgba(110,231,183,0)');
+      const pc = COLORS.primary;
+      grad.addColorStop(Math.max(0, p - .15), `rgba(${pc[0]},${pc[1]},${pc[2]},0)`);
+      grad.addColorStop(p, `rgba(${pc[0]},${pc[1]},${pc[2]},.25)`);
+      grad.addColorStop(Math.min(1, p + .15), `rgba(${pc[0]},${pc[1]},${pc[2]},0)`);
       ctx.fillStyle = grad;
       ctx.fillRect(x - 20, 0, 40, H);
     }
