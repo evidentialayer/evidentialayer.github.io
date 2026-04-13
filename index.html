@@ -54,7 +54,7 @@
   --mono-label:#6c5ce7;
 }
 
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory}
 body{
   background:var(--bg);
   color:var(--fg);
@@ -113,12 +113,23 @@ nav{
   transition:all .3s;
 }
 .nav-cta:hover{background:var(--accent);color:var(--bg)}
+#nav-section-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mono-label);
+  transition:opacity .3s;
+  opacity:0;
+  position:absolute;left:50%;transform:translateX(-50%);
+  white-space:nowrap;
+}
+#nav-section-title.visible{opacity:1}
 
 /* HERO */
 .hero{
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;text-align:center;
   padding:8rem 2rem 4rem;position:relative;
+  scroll-snap-align:start;
 }
 .hero-badge{
   display:inline-flex;align-items:center;gap:.5rem;
@@ -191,7 +202,7 @@ nav{
 }
 
 /* SECTIONS */
-section{padding:6rem 2rem;position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+section{padding:6rem 2rem;position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start}
 .section-label{
   font-family:'JetBrains Mono',monospace;
   font-size:1rem;letter-spacing:.15em;text-transform:uppercase;
@@ -356,19 +367,31 @@ footer{
   to{opacity:1;transform:translateY(0)}
 }
 
-/* SECTION DOTS */
-.section-dots{
-  display:flex;justify-content:center;gap:.75rem;
-  padding-top:2.5rem;
+
+
+/* SIDE DOT NAV */
+.side-nav{
+  position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);
+  z-index:100;display:flex;flex-direction:column;gap:.75rem;
 }
-.section-dot{
+.side-dot{
   width:10px;height:10px;border-radius:50%;
-  background:var(--muted);opacity:.3;
+  background:var(--muted);opacity:.25;
   border:none;cursor:pointer;padding:0;
   transition:background .3s,transform .3s,opacity .3s;
+  position:relative;
 }
-.section-dot:hover{opacity:.6;transform:scale(1.3)}
-.section-dot.active{background:var(--accent);opacity:1}
+.side-dot:hover{opacity:.5;transform:scale(1.3)}
+.side-dot.active{background:var(--accent);opacity:1;transform:scale(1.2)}
+.side-dot::after{
+  content:attr(data-label);
+  position:absolute;right:calc(100% + .75rem);top:50%;transform:translateY(-50%);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.side-dot:hover::after{opacity:1}
 
 @media(max-width:900px){
   nav{padding:1rem 1.5rem}
@@ -384,6 +407,7 @@ footer{
   .platform-layers{grid-template-columns:1fr}
   #nn-canvas{height:260px}
   .hero-actions{flex-direction:column;align-items:center}
+  .side-nav{display:none}
 }
 </style>
 </head>
@@ -393,6 +417,7 @@ footer{
   <div class="nav-left">
     <a href="/" class="logo"><img src="logo.svg" alt="Evidentia Labs"></a>
   </div>
+  <span id="nav-section-title"></span>
   <div class="nav-right">
     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
       <span class="icon-sun">&#9788;</span>
@@ -450,14 +475,13 @@ footer{
         <p>The EU AI-Act requires traceability and auditability for high-risk AI systems. The compliance deadline is August 2026.</p>
       </div>
     </div>
-    <div class="section-dots" data-current="problem"><button class="section-dot" data-target="problem" aria-label="Problem"></button><button class="section-dot" data-target="platform" aria-label="Platform"></button><button class="section-dot" data-target="methodology" aria-label="Methodology"></button><button class="section-dot" data-target="who" aria-label="Who It's For"></button><button class="section-dot" data-target="differentiators" aria-label="Why Us"></button><button class="section-dot" data-target="contact" aria-label="Get Involved"></button></div>
   </div>
 </section>
 
 <!-- PLATFORM -->
 <section id="platform">
   <div class="section-inner">
-    <div class="section-label">The Platform</div>
+    <div class="section-label">The Solution</div>
     <h2 class="section-title">Four layers of scientific validation</h2>
     <p class="section-desc">A vertically integrated system for evaluating, benchmarking, stress-testing, and auditing AI in science.</p>
     <div class="platform-layers">
@@ -482,7 +506,6 @@ footer{
         <p>Full provenance, reproducibility, and traceable methodology. Built for high-stakes and regulated environments.</p>
       </div>
     </div>
-    <div class="section-dots" data-current="platform"><button class="section-dot" data-target="problem" aria-label="Problem"></button><button class="section-dot" data-target="platform" aria-label="Platform"></button><button class="section-dot" data-target="methodology" aria-label="Methodology"></button><button class="section-dot" data-target="who" aria-label="Who It's For"></button><button class="section-dot" data-target="differentiators" aria-label="Why Us"></button><button class="section-dot" data-target="contact" aria-label="Get Involved"></button></div>
   </div>
 </section>
 
@@ -495,7 +518,6 @@ footer{
       <p>Existing benchmarks reward models for producing the right answer. We evaluate <em>how</em> they reason &mdash; whether they handle complexity, uncertainty, and contested evidence the way a careful scientist would.</p>
       <p>Our methodology separates reasoning quality from robustness under adversarial conditions, scored independently by credentialed domain experts using proprietary evaluation frameworks.</p>
     </div>
-    <div class="section-dots" data-current="methodology"><button class="section-dot" data-target="problem" aria-label="Problem"></button><button class="section-dot" data-target="platform" aria-label="Platform"></button><button class="section-dot" data-target="methodology" aria-label="Methodology"></button><button class="section-dot" data-target="who" aria-label="Who It's For"></button><button class="section-dot" data-target="differentiators" aria-label="Why Us"></button><button class="section-dot" data-target="contact" aria-label="Get Involved"></button></div>
   </div>
 </section>
 
@@ -521,7 +543,6 @@ footer{
         <p>Traceable, reproducible methodology designed for high-risk AI system requirements.</p>
       </div>
     </div>
-    <div class="section-dots" data-current="who"><button class="section-dot" data-target="problem" aria-label="Problem"></button><button class="section-dot" data-target="platform" aria-label="Platform"></button><button class="section-dot" data-target="methodology" aria-label="Methodology"></button><button class="section-dot" data-target="who" aria-label="Who It's For"></button><button class="section-dot" data-target="differentiators" aria-label="Why Us"></button><button class="section-dot" data-target="contact" aria-label="Get Involved"></button></div>
   </div>
 </section>
 
@@ -547,7 +568,6 @@ footer{
         <p>We evaluate how models handle complexity, uncertainty, and contested evidence &mdash; not whether they can pick the right multiple-choice answer.</p>
       </div>
     </div>
-    <div class="section-dots" data-current="differentiators"><button class="section-dot" data-target="problem" aria-label="Problem"></button><button class="section-dot" data-target="platform" aria-label="Platform"></button><button class="section-dot" data-target="methodology" aria-label="Methodology"></button><button class="section-dot" data-target="who" aria-label="Who It's For"></button><button class="section-dot" data-target="differentiators" aria-label="Why Us"></button><button class="section-dot" data-target="contact" aria-label="Get Involved"></button></div>
   </div>
 </section>
 
@@ -557,8 +577,16 @@ footer{
   <h2>We are building the evaluation standard for scientific AI</h2>
   <p>NeuroBench v1 is in development. We're working with a small number of partners to define what rigorous scientific evaluation looks like.</p>
   <a href="mailto:info@evidentia-labs.com" class="btn-primary" style="display:inline-block">Request Early Access</a>
-  <div class="section-dots" data-current="contact"><button class="section-dot" data-target="problem" aria-label="Problem"></button><button class="section-dot" data-target="platform" aria-label="Platform"></button><button class="section-dot" data-target="methodology" aria-label="Methodology"></button><button class="section-dot" data-target="who" aria-label="Who It's For"></button><button class="section-dot" data-target="differentiators" aria-label="Why Us"></button><button class="section-dot" data-target="contact" aria-label="Get Involved"></button></div>
 </section>
+
+<div class="side-nav" role="navigation" aria-label="Section navigation">
+  <button class="side-dot" data-target="problem" data-label="The Problem" aria-label="The Problem"></button>
+  <button class="side-dot" data-target="platform" data-label="The Solution" aria-label="The Solution"></button>
+  <button class="side-dot" data-target="methodology" data-label="Approach" aria-label="Approach"></button>
+  <button class="side-dot" data-target="who" data-label="Who It's For" aria-label="Who It's For"></button>
+  <button class="side-dot" data-target="differentiators" data-label="Why Evidentia" aria-label="Why Evidentia"></button>
+  <button class="side-dot" data-target="contact" data-label="Get Involved" aria-label="Get Involved"></button>
+</div>
 
 <footer>
   <span>&copy; 2026 Evidentia Labs. All rights reserved.</span>
@@ -584,37 +612,47 @@ footer{
   });
 })();
 
-/* ── Section dots navigation ── */
+/* ── Nav section title + side dots ── */
 (function(){
-  var dots = document.querySelectorAll('.section-dot');
-  dots.forEach(function(dot){
+  var titleEl = document.getElementById('nav-section-title');
+  var sections = document.querySelectorAll('section[id]');
+  var sideDots = document.querySelectorAll('.side-dot');
+  var currentId = '';
+
+  sideDots.forEach(function(dot){
     dot.addEventListener('click', function(){
       var target = document.getElementById(dot.dataset.target);
       if(target) target.scrollIntoView({behavior:'smooth'});
     });
   });
 
-  var sectionIds = ['problem','platform','methodology','who','differentiators','contact'];
-  var sections = sectionIds.map(function(id){ return document.getElementById(id); });
-  var allDotGroups = document.querySelectorAll('.section-dots');
-
-  function updateDots(){
-    var current = sectionIds[0];
+  function update(){
     var scrollY = window.scrollY + window.innerHeight / 2;
+    var foundId = '';
+    var foundLabel = '';
     for(var i = sections.length - 1; i >= 0; i--){
       if(sections[i].offsetTop <= scrollY){
-        current = sectionIds[i];
+        foundId = sections[i].id;
+        var label = sections[i].querySelector('.section-label');
+        foundLabel = label ? label.textContent : '';
         break;
       }
     }
-    allDotGroups.forEach(function(group){
-      group.querySelectorAll('.section-dot').forEach(function(d){
-        d.classList.toggle('active', d.dataset.target === current);
+    if(foundId !== currentId){
+      currentId = foundId;
+      if(foundLabel){
+        titleEl.textContent = foundLabel;
+        titleEl.classList.add('visible');
+      } else {
+        titleEl.classList.remove('visible');
+      }
+      sideDots.forEach(function(d){
+        d.classList.toggle('active', d.dataset.target === foundId);
       });
-    });
+    }
   }
-  window.addEventListener('scroll', updateDots, {passive:true});
-  updateDots();
+  window.addEventListener('scroll', update, {passive:true});
+  update();
 })();
 
 /* ── Neural network canvas ── */
