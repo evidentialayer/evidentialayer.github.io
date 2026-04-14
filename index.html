@@ -54,7 +54,7 @@
   --mono-label:#6c5ce7;
 }
 
-html{scroll-behavior:smooth;scroll-snap-type:y mandatory}
+html{scroll-behavior:smooth;scroll-snap-type:y proximity}
 body{
   background:var(--bg);
   color:var(--fg);
@@ -248,6 +248,149 @@ section{padding:6rem 2rem;position:relative;min-height:100vh;display:flex;flex-d
 }
 .problem-card p{font-size:1rem;line-height:1.65;color:var(--muted);font-weight:400}
 
+/* FAILURES */
+.failures{
+  border-top:1px solid var(--border-color);
+}
+.failures .section-inner{max-width:1120px}
+.failures-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1.5rem;margin-top:3rem;max-width:1120px;
+}
+.failure-card{
+  position:relative;
+  perspective:1400px;
+  cursor:pointer;
+  background:transparent;border:none;padding:0;
+  font:inherit;color:inherit;text-align:left;
+  width:100%;
+  -webkit-tap-highlight-color:transparent;
+}
+.failure-card:focus{outline:none}
+.failure-card:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:12px}
+.failure-inner{
+  position:relative;
+  display:grid;grid-template-areas:"stack";
+  transform-style:preserve-3d;
+  transition:transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.failure-card.flipped .failure-inner{transform:rotateY(180deg)}
+.failure-front,.failure-back{
+  grid-area:stack;
+  position:relative;
+  border:1px solid var(--border-color);border-radius:12px;
+  background:#F2EDE4;
+  padding:1.75rem;
+  display:flex;flex-direction:column;gap:1.25rem;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  transition:border-color .3s;
+  overflow:hidden;
+}
+[data-theme="dark"] .failure-front,
+[data-theme="dark"] .failure-back{background:#1B1A1E}
+.failure-back{transform:rotateY(180deg);justify-content:center}
+.failure-card:hover .failure-front,
+.failure-card:hover .failure-back{border-color:var(--danger)}
+.failure-header{
+  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+}
+.failure-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--danger);background:rgba(184,74,60,.1);
+  padding:.25rem .55rem;border-radius:3px;font-weight:500;
+}
+.failure-type{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;letter-spacing:.04em;
+  color:var(--muted);
+}
+.failure-model-output{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.92rem;line-height:1.6;color:var(--fg);
+  padding:1.25rem 1.4rem;border-radius:8px;
+  background-color:var(--glass);
+  background-image:linear-gradient(var(--border-color) 1px,transparent 1px),linear-gradient(90deg,var(--border-color) 1px,transparent 1px);
+  background-size:24px 24px;
+  background-position:-1px -1px;
+  position:relative;
+}
+[data-theme="dark"] .failure-model-output{
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+}
+.failure-verdict{
+  font-size:1rem;line-height:1.65;color:var(--muted);
+  padding:.1rem 0 .1rem 1rem;
+  border-left:2px solid var(--danger);
+}
+.failure-verdict::before{
+  content:'FLAWED';display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.12em;
+  color:var(--danger);font-weight:600;
+  margin-right:.6rem;
+  transform:translateY(-1px);
+}
+.failure-corner{
+  position:absolute;top:0;right:0;
+  width:58px;height:58px;
+  pointer-events:none;
+  transition:transform .3s,filter .3s;
+  transform-origin:top right;
+  filter:drop-shadow(-2px 2px 3px rgba(0,0,0,.15));
+  animation:cornerBob 2.8s ease-in-out infinite;
+}
+[data-theme="dark"] .failure-corner{
+  filter:drop-shadow(-2px 2px 4px rgba(0,0,0,.5));
+}
+.failure-corner svg{
+  display:block;width:100%;height:100%;overflow:visible;
+}
+.failure-corner .curl-void{fill:rgba(0,0,0,.28)}
+.failure-corner .curl-flap{
+  fill:var(--bg);
+  stroke:rgba(0,0,0,.22);
+  stroke-width:.7;
+  stroke-linejoin:round;
+}
+[data-theme="dark"] .failure-corner .curl-void{fill:rgba(184,74,60,.8)}
+[data-theme="dark"] .failure-corner .curl-flap{
+  fill:#1f1d22;
+  stroke:rgba(255,255,255,.12);
+}
+@keyframes cornerBob{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+}
+.failure-card:hover .failure-corner{
+  transform:scale(1.3);
+  filter:drop-shadow(-3px 3px 5px rgba(0,0,0,.25));
+  animation:none;
+}
+.failure-card.flipped .failure-corner{
+  transform:scaleX(-1);
+  animation:none;
+}
+.failure-hint{
+  margin-top:auto;align-self:flex-end;
+  display:flex;align-items:center;gap:.5rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);opacity:.75;
+  transition:color .3s,opacity .3s,gap .3s;
+}
+.failure-hint-arrow{
+  display:inline-block;
+  transition:transform .3s;
+}
+.failure-card:hover .failure-hint{
+  color:var(--danger);opacity:1;gap:.75rem;
+}
+.failure-card:hover .failure-hint-arrow{transform:translateX(3px)}
+.failure-back .failure-hint{color:var(--danger);opacity:.85}
+.failure-back .failure-hint-arrow{transform:scaleX(-1)}
+.failure-card:hover .failure-back .failure-hint-arrow{transform:scaleX(-1) translateX(3px)}
+
 /* PLATFORM */
 .platform-layers{
   display:grid;grid-template-columns:repeat(4,1fr);
@@ -397,7 +540,7 @@ footer{
   nav{padding:1rem 1.5rem}
   #nav-section-title{display:none}
   section,.hero{padding-left:1.5rem;padding-right:1.5rem}
-  .problem-grid,.customers-grid,.diff-row{grid-template-columns:1fr}
+  .problem-grid,.customers-grid,.diff-row,.failures-grid{grid-template-columns:1fr}
   .platform-layers{grid-template-columns:1fr 1fr}
   .hero-meta{flex-direction:column;gap:1.5rem}
   footer{flex-direction:column;gap:1rem;text-align:center}
@@ -475,6 +618,94 @@ footer{
         <h3>Regulation is coming</h3>
         <p>The EU AI-Act requires traceability and auditability for high-risk AI systems. The compliance deadline is August 2026.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAILURES -->
+<section class="failures" id="failures">
+  <div class="section-inner">
+    <div class="section-label">What Models Miss</div>
+    <h2 class="section-title">Today's AI models fail at science in ways that are hard to see</h2>
+    <p class="section-desc">These are real failure patterns. The outputs read well. They're still wrong.</p>
+    <div class="failures-grid">
+
+      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
+        <div class="failure-inner">
+          <div class="failure-front">
+            <div class="failure-header">
+              <span class="failure-tag">Failure</span>
+              <span class="failure-type">Correlation treated as causation</span>
+            </div>
+            <div class="failure-model-output">"Increased activity in the motor cortex during the task <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">demonstrates</span> that this region drives the behavior."</div>
+            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+          <div class="failure-back">
+            <div class="failure-verdict">Increased activity is correlation. The model skipped the step of testing whether disrupting the region impairs the behavior &mdash; the actual test for causal necessity.</div>
+            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+        </div>
+      </div>
+        
+      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
+        <div class="failure-inner">
+          <div class="failure-front">
+            <div class="failure-header">
+              <span class="failure-tag">Failure</span>
+              <span class="failure-type">Exaggerated claims</span>
+            </div>
+            <div class="failure-model-output">"Increasing dopamine levels <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">universally improves</span> cognitive performance across all domains through enhanced synaptic plasticity."</div>
+            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+          <div class="failure-back">
+            <div class="failure-verdict">A careful scientist would reject this premise. Dopamine effects are nonlinear, circuit-specific, and dose-dependent. Excess dopamine impairs prefrontal function. The model should challenge the claim, not explain it.</div>
+            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
+        <div class="failure-inner">
+          <div class="failure-front">
+            <div class="failure-header">
+              <span class="failure-tag">Failure</span>
+              <span class="failure-type">Over-simplified statements</span>
+            </div>
+            <div class="failure-model-output">"Parkinsonian bradykinesia <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">is fully explained by</span> reduced direct pathway activity and increased indirect pathway activity following dopamine loss."</div>
+            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+          <div class="failure-back">
+            <div class="failure-verdict">This classical framework is useful but incomplete. Current evidence points to heterogeneous cell types, distributed network dynamics, and task-dependent contributions that the model flattens into a textbook summary.</div>
+            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
+        <div class="failure-inner">
+          <div class="failure-front">
+            <div class="failure-header">
+              <span class="failure-tag">Failure</span>
+              <span class="failure-type">Hallucinated evidence</span>
+            </div>
+            <div class="failure-model-output">"As demonstrated by <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">Zhang et al. (2023)</span> in Nature Neuroscience, optogenetic activation of D1-MSNs in the dorsal striatum is sufficient to rescue motor deficits in 6-OHDA lesioned mice."</div>
+            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+          <div class="failure-back">
+            <div class="failure-verdict">This paper does not exist. The model fabricated a citation with plausible authors, journal, and methodology to support its argument. No expert reviewer would accept this &mdash; but automated evaluation would miss it entirely.</div>
+            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -582,6 +813,7 @@ footer{
 
 <div class="side-nav" role="navigation" aria-label="Section navigation">
   <button class="side-dot" data-target="problem" data-label="The Problem" aria-label="The Problem"></button>
+  <button class="side-dot" data-target="failures" data-label="What Models Miss" aria-label="What Models Miss"></button>
   <button class="side-dot" data-target="platform" data-label="The Solution" aria-label="The Solution"></button>
   <button class="side-dot" data-target="methodology" data-label="Approach" aria-label="Approach"></button>
   <button class="side-dot" data-target="who" data-label="Who It's For" aria-label="Who It's For"></button>
@@ -654,6 +886,36 @@ footer{
   }
   window.addEventListener('scroll', update, {passive:true});
   update();
+})();
+
+/* ── Failure card flip ── */
+(function(){
+  var cards = document.querySelectorAll('.failure-card');
+  cards.forEach(function(card){
+    function toggle(){
+      var flipped = card.classList.toggle('flipped');
+      card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+    }
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+    });
+  });
+
+  function equalizeHeights(){
+    var inners = document.querySelectorAll('.failure-inner');
+    inners.forEach(function(el){ el.style.minHeight = ''; });
+    var max = 0;
+    inners.forEach(function(el){ if(el.offsetHeight > max) max = el.offsetHeight; });
+    inners.forEach(function(el){ el.style.minHeight = max + 'px'; });
+  }
+  if(document.readyState === 'complete') equalizeHeights();
+  else window.addEventListener('load', equalizeHeights);
+  var resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(equalizeHeights, 120);
+  });
 })();
 
 /* ── Neural network canvas ── */
