@@ -91,9 +91,8 @@ nav{
   width:auto;
   display:block;
 }
-[data-theme="dark"] .logo img{
-  filter:brightness(0) invert(1);
-}
+[data-theme="light"] .logo .logo-dark{display:none}
+[data-theme="dark"] .logo .logo-light{display:none}
 .theme-toggle{
   background:none;border:1px solid var(--border-color);
   color:var(--fg);cursor:pointer;
@@ -582,7 +581,10 @@ footer{
 
 <nav>
   <div class="nav-left">
-    <a href="/" class="logo"><img src="logo.svg" alt="Evidentia Labs"></a>
+    <a href="/" class="logo">
+      <img src="evidentia_labs.svg" alt="Evidentia Labs" class="logo-light">
+      <img src="evidentia_labs_white.svg" alt="Evidentia Labs" class="logo-dark">
+    </a>
   </div>
   <span id="nav-section-title"></span>
   <div class="nav-right">
