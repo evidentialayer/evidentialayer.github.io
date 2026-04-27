@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidentia Labs — Scientific Evaluation for AI</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+(function(){
+  var saved = localStorage.getItem('theme');
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var theme = saved || (prefersDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* ── Light mode (default) ── */
+:root{
+  --bg:#EDE8E0;
+  --fg:#2A1B3D;
+  --accent:#0D8C8C;
+  --accent2:#C4873B;
+  --danger:#B84A3C;
+  --muted:#5C5347;
+  --border-color:#DDD6C7;
+  --glass:rgba(42,27,61,.04);
+  --nav-bg:rgba(237,232,224,.8);
+  --nav-border:rgba(221,214,199,.5);
+  --grain-opacity:.35;
+  --pillar-hover:rgba(13,140,140,.18);
+  --cta-shadow:rgba(13,140,140,.25);
+  --card-bg:rgba(42,27,61,.03);
+  --mono-label:var(--accent);
+}
+
+/* ── Dark mode ── */
+[data-theme="dark"]{
+  --bg:#141316;
+  --fg:#E8E6E1;
+  --accent:#0D8C8C;
+  --accent2:#C4873B;
+  --danger:#B84A3C;
+  --muted:#B8B0A3;
+  --border-color:rgba(255,255,255,.08);
+  --glass:rgba(255,255,255,.04);
+  --nav-bg:rgba(20,19,22,.8);
+  --nav-border:rgba(255,255,255,.05);
+  --grain-opacity:.5;
+  --pillar-hover:rgba(13,140,140,.2);
+  --cta-shadow:rgba(13,140,140,.3);
+  --card-bg:rgba(255,255,255,.02);
+  --mono-label:#6c5ce7;
+}
+
+html{scroll-behavior:smooth;scroll-snap-type:y proximity}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+  min-height:100vh;
+  transition:background .4s,color .4s;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Grain overlay */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:128px 128px;
+  opacity:var(--grain-opacity);
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.5rem 3rem;
+  background:var(--nav-bg);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--nav-border);
+  transition:background .4s,border-color .4s;
+}
+.nav-left{display:flex;align-items:center;gap:1rem}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.logo img{
+  height:28px;
+  width:auto;
+  display:block;
+}
+[data-theme="dark"] .logo img{
+  filter:brightness(0) invert(1);
+}
+.theme-toggle{
+  background:none;border:1px solid var(--border-color);
+  color:var(--fg);cursor:pointer;
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;line-height:1;
+  transition:border-color .3s,color .3s;
+}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon{display:none}
+[data-theme="light"] .theme-toggle .icon-sun{display:block}
+[data-theme="dark"] .theme-toggle .icon-moon{display:block}
+.nav-cta{
+  padding:.6rem 1.6rem;border:1px solid var(--accent);
+  color:var(--accent);border-radius:100px;font-size:1rem;
+  text-decoration:none;letter-spacing:.04em;font-weight:500;
+  transition:all .3s;
+}
+.nav-cta:hover{background:var(--accent);color:var(--bg)}
+#nav-section-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mono-label);
+  transition:opacity .3s;
+  opacity:0;
+  position:absolute;left:50%;transform:translateX(-50%);
+  white-space:nowrap;
+}
+#nav-section-title.visible{opacity:1}
+
+/* HERO */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:8rem 2rem 4rem;position:relative;
+  scroll-snap-align:start;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:1rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:2rem;
+  opacity:0;animation:fadeUp .8s .2s forwards;
+}
+.hero-badge::before{
+  content:'';width:8px;height:8px;
+  background:var(--accent);border-radius:50%;
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1}
+  50%{opacity:.4}
+}
+.hero h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2.8rem,6vw,5rem);
+  line-height:1.1;max-width:800px;
+  letter-spacing:-.03em;font-weight:400;
+  opacity:0;animation:fadeUp .8s .35s forwards;
+}
+.hero h1 em{
+  font-style:italic;color:var(--accent);
+}
+.hero-sub{
+  margin-top:2rem;font-size:clamp(1rem,2vw,1.15rem);
+  color:var(--muted);max-width:580px;line-height:1.7;
+  font-weight:400;
+  opacity:0;animation:fadeUp .8s .5s forwards;
+}
+.hero-actions{
+  display:flex;gap:1rem;margin-top:2.5rem;
+  opacity:0;animation:fadeUp .8s .65s forwards;
+}
+.btn-primary{
+  padding:.85rem 2rem;
+  background:var(--accent);color:var(--bg);
+  font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;
+  border:none;border-radius:100px;cursor:pointer;
+  text-decoration:none;transition:all .3s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--cta-shadow)}
+.btn-secondary{
+  padding:.85rem 2rem;
+  background:transparent;color:var(--fg);
+  font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:500;
+  border:1px solid var(--border-color);border-radius:100px;cursor:pointer;
+  text-decoration:none;transition:all .3s;
+}
+.btn-secondary:hover{border-color:var(--muted)}
+.hero-meta{
+  display:flex;gap:3rem;padding-top:2rem;
+  border-top:1px solid var(--border-color);
+  opacity:0;animation:fadeUp .8s .8s forwards;
+}
+.hero-meta-item{font-size:1rem;color:var(--muted);letter-spacing:.04em}
+.hero-meta-item strong{
+  display:block;font-family:'Instrument Serif',serif;
+  font-size:1.3rem;font-weight:400;color:var(--fg);margin-bottom:.25rem;
+}
+
+/* CANVAS */
+#nn-canvas{
+  width:100%;max-width:900px;height:420px;
+  margin:3.5rem auto 0;
+  opacity:0;animation:fadeUp 1s .9s forwards;
+}
+
+/* SECTIONS */
+section{padding:6rem 2rem;position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start}
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--mono-label);margin-bottom:1rem;
+}
+.section-title{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(1.8rem,3vw,2.6rem);
+  font-weight:400;line-height:1.2;letter-spacing:-.02em;
+  max-width:650px;margin-bottom:1.5rem;
+}
+.section-desc{
+  font-size:1.05rem;line-height:1.7;
+  color:var(--muted);max-width:550px;
+}
+.section-inner{max-width:1100px;margin:0 auto}
+
+/* PROBLEM */
+.problem{
+  border-top:1px solid var(--border-color);
+  border-bottom:1px solid var(--border-color);
+  background:var(--glass);
+}
+.problem-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1.5rem;margin-top:3rem;max-width:1100px;
+}
+.problem-card{
+  padding:2rem;border:1px solid var(--border-color);
+  border-radius:12px;background:var(--card-bg);
+  transition:border-color .3s,background .3s;
+}
+.problem-card:hover{border-color:var(--accent);background:var(--pillar-hover)}
+.problem-icon{
+  font-size:1.2rem;margin-bottom:1rem;display:flex;
+  align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(13,140,140,.08);color:var(--accent);
+}
+.problem-card h3{
+  font-family:'Instrument Serif',serif;
+  font-size:1.3rem;font-weight:400;margin-bottom:.6rem;
+}
+.problem-card p{font-size:1rem;line-height:1.65;color:var(--muted);font-weight:400}
+
+/* FAILURES */
+.failures{
+  border-top:1px solid var(--border-color);
+}
+.failures .section-inner{max-width:1120px}
+.failures-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1.5rem;margin-top:3rem;max-width:1120px;
+}
+.failure-card{
+  position:relative;
+  perspective:1400px;
+  cursor:pointer;
+  background:transparent;border:none;padding:0;
+  font:inherit;color:inherit;text-align:left;
+  width:100%;
+  -webkit-tap-highlight-color:transparent;
+}
+.failure-card:focus{outline:none}
+.failure-card:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:12px}
+.failure-inner{
+  position:relative;
+  display:grid;grid-template-areas:"stack";
+  transform-style:preserve-3d;
+  transition:transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.failure-card.flipped .failure-inner{transform:rotateY(180deg)}
+.failure-front,.failure-back{
+  grid-area:stack;
+  position:relative;
+  border:1px solid var(--border-color);border-radius:12px;
+  background:#F2EDE4;
+  padding:1.75rem;
+  display:flex;flex-direction:column;gap:1.25rem;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  transition:border-color .3s;
+  overflow:hidden;
+}
+[data-theme="dark"] .failure-front,
+[data-theme="dark"] .failure-back{background:#1B1A1E}
+.failure-back{transform:rotateY(180deg);justify-content:center}
+.failure-card:hover .failure-front,
+.failure-card:hover .failure-back{border-color:var(--danger)}
+.failure-header{
+  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+}
+.failure-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--danger);background:rgba(184,74,60,.1);
+  padding:.25rem .55rem;border-radius:3px;font-weight:500;
+}
+.failure-type{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;letter-spacing:.04em;
+  color:var(--muted);
+}
+.failure-model-output{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.92rem;line-height:1.6;color:var(--fg);
+  padding:1.25rem 1.4rem;border-radius:8px;
+  background-color:var(--glass);
+  background-image:linear-gradient(var(--border-color) 1px,transparent 1px),linear-gradient(90deg,var(--border-color) 1px,transparent 1px);
+  background-size:24px 24px;
+  background-position:-1px -1px;
+  position:relative;
+}
+[data-theme="dark"] .failure-model-output{
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+}
+.failure-verdict{
+  font-size:1rem;line-height:1.65;color:var(--muted);
+  padding:.1rem 0 .1rem 1rem;
+  border-left:2px solid var(--danger);
+}
+.failure-verdict::before{
+  content:'FLAWED';display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.12em;
+  color:var(--danger);font-weight:600;
+  margin-right:.6rem;
+  transform:translateY(-1px);
+}
+.failure-corner{
+  position:absolute;top:0;right:0;
+  width:58px;height:58px;
+  pointer-events:none;
+  transition:transform .3s,filter .3s;
+  transform-origin:top right;
+  filter:drop-shadow(-2px 2px 3px rgba(0,0,0,.15));
+  animation:cornerBob 2.8s ease-in-out infinite;
+}
+[data-theme="dark"] .failure-corner{
+  filter:drop-shadow(-2px 2px 4px rgba(0,0,0,.5));
+}
+.failure-corner svg{
+  display:block;width:100%;height:100%;overflow:visible;
+}
+.failure-corner .curl-void{fill:rgba(0,0,0,.28)}
+.failure-corner .curl-flap{
+  fill:var(--bg);
+  stroke:rgba(0,0,0,.22);
+  stroke-width:.7;
+  stroke-linejoin:round;
+}
+[data-theme="dark"] .failure-corner .curl-void{fill:rgba(184,74,60,.8)}
+[data-theme="dark"] .failure-corner .curl-flap{
+  fill:#1f1d22;
+  stroke:rgba(255,255,255,.12);
+}
+@keyframes cornerBob{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+}
+.failure-card:hover .failure-corner{
+  transform:scale(1.3);
+  filter:drop-shadow(-3px 3px 5px rgba(0,0,0,.25));
+  animation:none;
+}
+.failure-card.flipped .failure-corner{
+  transform:scaleX(-1);
+  animation:none;
+}
+.failure-hint{
+  margin-top:auto;align-self:flex-end;
+  display:flex;align-items:center;gap:.5rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);opacity:.75;
+  transition:color .3s,opacity .3s,gap .3s;
+}
+.failure-hint-arrow{
+  display:inline-block;
+  transition:transform .3s;
+}
+.failure-card:hover .failure-hint{
+  color:var(--danger);opacity:1;gap:.75rem;
+}
+.failure-card:hover .failure-hint-arrow{transform:translateX(3px)}
+.failure-back .failure-hint{color:var(--danger);opacity:.85}
+.failure-back .failure-hint-arrow{transform:scaleX(-1)}
+.failure-card:hover .failure-back .failure-hint-arrow{transform:scaleX(-1) translateX(3px)}
+
+/* PLATFORM */
+.platform-layers{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1.5rem;margin-top:3rem;max-width:1100px;
+}
+.layer-card{
+  padding:2rem 1.5rem;border:1px solid var(--border-color);
+  border-radius:12px;background:var(--card-bg);
+  transition:all .4s;
+}
+.layer-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.layer-number{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1rem;color:var(--accent);
+  letter-spacing:.1em;margin-bottom:1.2rem;text-transform:uppercase;
+}
+.layer-card h3{
+  font-family:'Instrument Serif',serif;
+  font-size:1.3rem;font-weight:400;margin-bottom:.75rem;line-height:1.3;
+}
+.layer-card p{font-size:1rem;line-height:1.65;color:var(--muted);font-weight:400}
+.layer-card.moat{border-color:rgba(13,140,140,.25);background:rgba(13,140,140,.04)}
+.moat-badge{
+  display:inline-block;font-family:'JetBrains Mono',monospace;
+  font-size:1rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);background:rgba(13,140,140,.1);
+  padding:.2rem .5rem;border-radius:3px;margin-top:.75rem;
+}
+
+/* METHODOLOGY */
+.methodology{
+  border-top:1px solid var(--border-color);
+  background:var(--glass);
+}
+.methodology-text{max-width:650px;margin-top:2rem}
+.methodology-text p{
+  font-size:1.05rem;line-height:1.75;color:var(--muted);
+  margin-bottom:1.5rem;font-weight:400;
+}
+.methodology-text p em{color:var(--fg);font-style:italic}
+.methodology-text .fine-print{
+  font-size:1rem;line-height:1.65;color:var(--muted);opacity:.7;
+}
+
+/* CUSTOMERS */
+.customers-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2rem;margin-top:3rem;max-width:1100px;
+}
+.customer-card{
+  padding:2.5rem 2rem;border:1px solid var(--border-color);
+  border-radius:12px;background:var(--card-bg);
+  transition:border-color .3s;
+}
+.customer-card:hover{border-color:var(--accent)}
+.customer-type{
+  font-family:'JetBrains Mono',monospace;
+  font-size:1rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent2);margin-bottom:1rem;
+}
+.customer-card h3{
+  font-family:'Instrument Serif',serif;
+  font-size:1.3rem;font-weight:400;margin-bottom:.75rem;line-height:1.3;
+}
+.customer-card p{font-size:1rem;line-height:1.65;color:var(--muted);font-weight:400}
+
+/* DIFFERENTIATORS */
+.diff{
+  border-top:1px solid var(--border-color);
+  background:var(--glass);
+}
+.diff-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2.5rem;margin-top:3rem;max-width:1100px;
+}
+.diff-item h3{
+  font-family:'Instrument Serif',serif;
+  font-size:1.3rem;font-weight:400;margin-bottom:.5rem;
+}
+.diff-item p{font-size:1rem;line-height:1.65;color:var(--muted);font-weight:400}
+.accent-line{width:32px;height:2px;background:var(--accent);margin-bottom:1.2rem}
+
+/* CTA */
+.cta-section{
+  padding:6rem 2rem 7rem;text-align:center;
+  border-top:1px solid var(--border-color);
+  align-items:center;
+}
+.cta-section h2{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(2rem,3.5vw,2.8rem);
+  font-weight:400;letter-spacing:-.02em;margin-bottom:1rem;
+}
+.cta-section > p{
+  font-size:1.05rem;color:var(--muted);max-width:500px;
+  margin:0 auto 2.5rem;line-height:1.6;font-weight:400;
+}
+.cta-note{
+  margin-top:1.5rem;font-size:1rem;color:var(--muted);font-weight:400;
+}
+
+/* FOOTER */
+footer{
+  padding:2rem 3rem;border-top:1px solid var(--border-color);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:1rem;color:var(--muted);
+}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{
+  font-size:1rem;color:var(--muted);
+  text-decoration:none;transition:color .3s;
+}
+.footer-links a:hover{color:var(--fg)}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+
+
+/* SIDE DOT NAV */
+.side-nav{
+  position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);
+  z-index:100;display:flex;flex-direction:column;gap:.75rem;
+}
+.side-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--muted);opacity:.25;
+  border:none;cursor:pointer;padding:0;
+  transition:background .3s,transform .3s,opacity .3s;
+  position:relative;
+}
+.side-dot:hover{opacity:.5;transform:scale(1.3)}
+.side-dot.active{background:var(--accent);opacity:1;transform:scale(1.2)}
+.side-dot::after{
+  content:attr(data-label);
+  position:absolute;right:calc(100% + .75rem);top:50%;transform:translateY(-50%);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.side-dot:hover::after{opacity:1}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  #nav-section-title{display:none}
+  section,.hero{padding-left:1.5rem;padding-right:1.5rem}
+  .problem-grid,.customers-grid,.diff-row,.failures-grid{grid-template-columns:1fr}
+  .platform-layers{grid-template-columns:1fr 1fr}
+  .hero-meta{flex-direction:column;gap:1.5rem}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+}
+@media(max-width:600px){
+  nav{padding:1rem 1rem}
+  .nav-cta{padding:.45rem 1rem;font-size:.85rem}
+  .platform-layers{grid-template-columns:1fr}
+  #nn-canvas{height:260px}
+  .hero-actions{flex-direction:column;align-items:center}
+  .side-nav{display:none}
+}
+
+/* ── Dateline strip ── */
+.dateline{padding:3rem 2rem;border-top:1px solid var(--border-color);border-bottom:1px solid var(--border-color)}
+.dateline-inner{max-width:1100px;margin:0 auto;display:flex;align-items:baseline;gap:2rem;flex-wrap:wrap}
+.dateline-date{font-family:'Instrument Serif',serif;font-size:clamp(2.4rem,4.5vw,3.6rem);line-height:1;color:var(--fg);white-space:nowrap;flex:0 0 auto}
+.dateline-context{color:var(--muted);font-size:1rem;line-height:1.5;max-width:50ch;margin:0;flex:1 1 320px}
+@media (max-width:700px){.dateline-inner{gap:.75rem}}
+
+/* ── Why Now ── */
+.why-now-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.why-now-card{padding:2rem 1.75rem;border:1px solid var(--border-color);border-radius:12px;background:var(--glass)}
+.why-now-num{font-family:'JetBrains Mono',monospace;font-size:.85rem;letter-spacing:.15em;color:var(--accent);margin-bottom:1rem}
+.why-now-card h3{font-family:'Instrument Serif',serif;font-size:1.3rem;font-weight:400;margin:0 0 .75rem;color:var(--fg)}
+.why-now-card p{color:var(--muted);font-weight:300;line-height:1.55;margin:0}
+@media (max-width:900px){.why-now-grid{grid-template-columns:1fr}}
+
+/* ── Platform kicker ── */
+.platform-kicker{max-width:70ch;margin:2.5rem auto 0;text-align:center;color:var(--muted);font-style:italic;font-size:1.05rem;line-height:1.5}
+
+/* ── Diff row 4-up ── */
+.diff-row{grid-template-columns:repeat(4,1fr)}
+@media (max-width:1100px){.diff-row{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.diff-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="/" class="logo"><img src="logo.svg" alt="Evidentia Labs"></a>
+  </div>
+  <span id="nav-section-title"></span>
+  <div class="nav-right">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+      <span class="icon-sun">&#9788;</span>
+      <span class="icon-moon">&#9790;</span>
+    </button>
+    <a href="#contact" class="nav-cta">Request Access</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>The <em>trust</em> layer for AI.</h1>
+  <p class="hero-sub">AI models generate confident, fluent answers. <br>We build the benchmarks and the audit trail that test whether the reasoning holds up: under expert scrutiny, under adversarial conditions, under regulatory review.</p>
+  <canvas id="nn-canvas"></canvas>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <strong>Independent</strong>
+      Not built by labs
+    </div>
+    <div class="hero-meta-item">
+      <strong>Expert-validated</strong>
+      Domain scientist scoring
+    </div>
+    <div class="hero-meta-item">
+      <strong>Audit-grade</strong>
+      Built for EU AI Act
+    </div>
+  </div>
+</section>
+
+<!-- DATELINE STRIP -->
+<aside class="dateline" aria-label="Regulatory deadline">
+  <div class="dateline-inner">
+    <div class="dateline-date">August 2026</div>
+    <p class="dateline-context">EU AI Act high-risk AI compliance takes effect. Documented, traceable evaluation becomes a legal requirement.</p>
+  </div>
+</aside>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="section-inner">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">AI in science is bottlenecked by the absence of rigorous evaluation</h2>
+    <p class="section-desc">Models produce fluent, confident, and subtly wrong scientific claims. No trusted standard exists to catch them.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 3-1.5 5-3 6.5V18a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-2.5C6.5 14 5 12 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="22" x2="15" y2="22"/><line x1="10" y1="18" x2="10" y2="22"/><line x1="14" y1="18" x2="14" y2="22"/></svg></div>
+        <h3>Plausible hallucinations</h3>
+        <p>Models generate scientific reasoning that reads well but overstates evidence, flattens disagreement, or relies on outdated consensus.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="5" y1="15" x2="7" y2="13"/><line x1="7" y1="13" x2="11" y2="17"/><line x1="11" y1="17" x2="13" y2="12"/><line x1="13" y1="12" x2="19" y2="19"/></svg></div>
+        <h3>No domain benchmarks</h3>
+        <p>Existing benchmarks test recall and pattern-matching. None evaluate whether a model reasons like a careful scientist under real-world complexity.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><polyline points="21 3 21 9 15 9"/><path d="M21 3l-9 9"/></svg></div>
+        <h3>Self-evaluation doesn't work</h3>
+        <p>AI labs cannot credibly validate their own models for external trust — just as drug developers cannot run their own clinical trials.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+        <h3>Regulation is coming</h3>
+        <p>The EU AI Act requires traceability and auditability for high-risk AI systems. The compliance deadline is August 2026.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY NOW -->
+<section class="why-now" id="why-now">
+  <div class="section-inner">
+    <div class="section-label">Why Now</div>
+    <h2 class="section-title">Three forces are converging at once</h2>
+    <p class="section-desc">And the infrastructure to handle them doesn't exist yet.</p>
+    <div class="why-now-grid">
+      <div class="why-now-card">
+        <div class="why-now-num">01</div>
+        <h3>AI is being deployed in science</h3>
+        <p>Pharma, biotech, and clinical workflows now run on frontier models. The question is no longer whether they're capable, but whether their reasoning can be trusted in decisions that matter.</p>
+      </div>
+      <div class="why-now-card">
+        <div class="why-now-num">02</div>
+        <h3>Regulation is now law</h3>
+        <p>High-risk AI rules under the EU AI Act take effect August 2026. Documented, traceable evaluation becomes a compliance requirement, not a research preference.</p>
+      </div>
+      <div class="why-now-card">
+        <div class="why-now-num">03</div>
+        <h3>Self-evaluation has run its course</h3>
+        <p>Labs publishing their own benchmark results is no longer sufficient. Every comparable category, e.g. drug trials, credit ratings, financial audit, product safety, eventually required an independent third party.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAILURES -->
+<section class="failures" id="failures">
+  <div class="section-inner">
+    <div class="section-label">What Models Miss</div>
+    <h2 class="section-title">Today's AI models fail at science in ways that are hard to see</h2>
+    <p class="section-desc">These are real failure patterns. The outputs read well. They're still wrong.</p>
+    <div class="failures-grid">
+
+      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
+        <div class="failure-inner">
+          <div class="failure-front">
+            <div class="failure-header">
+              <span class="failure-tag">Failure</span>
+              <span class="failure-type">Correlation treated as causation</span>
+            </div>
+            <div class="failure-model-output">"Increased activity in the motor cortex during the task <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">demonstrates</span> that this region drives the behavior."</div>
+            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+          <div class="failure-back">
+            <div class="failure-verdict">Increased activity is correlation. The model skipped the step of testing whether disrupting the region impairs the behavior, the actual test for causal necessity.</div>
+            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+        </div>
+      </div>
+        
+      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
+        <div class="failure-inner">
+          <div class="failure-front">
+            <div class="failure-header">
+              <span class="failure-tag">Failure</span>
+              <span class="failure-type">Exaggerated claims</span>
+            </div>
+            <div class="failure-model-output">"Increasing dopamine levels <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">universally improves</span> cognitive performance across all domains through enhanced synaptic plasticity."</div>
+            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+          <div class="failure-back">
+            <div class="failure-verdict">A careful scientist would reject this premise. Dopamine effects are nonlinear, circuit-specific, and dose-dependent. Excess dopamine impairs prefrontal function. The model should challenge the claim, not explain it.</div>
+            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
+        <div class="failure-inner">
+          <div class="failure-front">
+            <div class="failure-header">
+              <span class="failure-tag">Failure</span>
+              <span class="failure-type">Over-simplified statements</span>
+            </div>
+            <div class="failure-model-output">"Parkinsonian bradykinesia <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">is fully explained by</span> reduced direct pathway activity and increased indirect pathway activity following dopamine loss."</div>
+            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+          <div class="failure-back">
+            <div class="failure-verdict">This classical framework is useful but incomplete. Current evidence points to heterogeneous cell types, distributed network dynamics, and task-dependent contributions that the model flattens into a textbook summary.</div>
+            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
+        <div class="failure-inner">
+          <div class="failure-front">
+            <div class="failure-header">
+              <span class="failure-tag">Failure</span>
+              <span class="failure-type">Hallucinated evidence</span>
+            </div>
+            <div class="failure-model-output">"As demonstrated by <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">Zhang et al. (2023)</span> in Nature Neuroscience, optogenetic activation of D1-MSNs in the dorsal striatum is sufficient to rescue motor deficits in 6-OHDA lesioned mice."</div>
+            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+          <div class="failure-back">
+            <div class="failure-verdict">This paper does not exist. The model fabricated a citation with plausible authors, journal, and methodology to support its argument. No expert reviewer would accept this, but automated evaluation would miss it entirely.</div>
+            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
+            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section id="platform">
+  <div class="section-inner">
+    <div class="section-label">The Solution</div>
+    <h2 class="section-title">Four layers of scientific validation</h2>
+    <p class="section-desc">A vertically integrated system for evaluating, benchmarking, stress-testing, and auditing AI in science.</p>
+    <div class="platform-layers">
+      <div class="layer-card">
+        <div class="layer-number">Layer 01</div>
+        <h3>Expert-Curated Evaluation Datasets</h3>
+        <p>Scientific problems designed by domain experts to test what generic benchmarks miss.</p>
+      </div>
+      <div class="layer-card">
+        <div class="layer-number">Layer 02</div>
+        <h3>Benchmarks built to be cited</h3>
+        <p>Versioned, domain-specific evaluation suites. Quantitative. Comparable across models and over time. Built to cite, not to publish once.</p>
+      </div>
+      <div class="layer-card">
+        <div class="layer-number">Layer 03</div>
+        <h3>Adversarial Scientific Testing</h3>
+        <p>Systematic stress-testing of scientific reasoning under conditions designed to surface failures that matter.</p>
+      </div>
+      <div class="layer-card">
+        <div class="layer-number">Layer 04</div>
+        <h3>Regulatory-Grade Audit Trail</h3>
+        <p>Full provenance, reproducibility, and traceable methodology. Built for high-stakes and regulated environments.</p>
+      </div>
+    </div>
+    <p class="platform-kicker">This is not annotation. It's structured expert judgment under uncertainty — versioned, scored, and auditable.</p>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section class="methodology" id="methodology">
+  <div class="section-inner">
+    <div class="section-label">Approach</div>
+    <h2 class="section-title">We measure scientific reasoning — not recall, not preference</h2>
+    <div class="methodology-text">
+      <p>Existing benchmarks reward models for producing the right answer. We evaluate <em>how</em> they reason: whether they handle complexity, uncertainty, and contested evidence the way a careful scientist would.</p>
+      <p>Our methodology separates reasoning quality from robustness under adversarial conditions, scored independently by credentialed domain experts using proprietary evaluation frameworks.</p>
+      <p>The benchmark is versioned. Science evolves; the evaluation evolves with it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section id="who">
+  <div class="section-inner">
+    <div class="section-label">Who It's For</div>
+    <h2 class="section-title">Built for those who need AI to be right, not just fluent</h2>
+    <div class="customers-grid">
+      <div class="customer-card">
+        <div class="customer-type">AI Labs</div>
+        <h3>Find the failure modes your safety team can act on</h3>
+        <p>Independent evaluation and structured failure analysis, designed to surface the reasoning errors that matter — not the ones that look good on a leaderboard.</p>
+      </div>
+      <div class="customer-card">
+        <div class="customer-type">Biotech &amp; Pharma</div>
+        <h3>Validate AI before it touches decisions</h3>
+        <p>Compare and evaluate AI tools for scientific workflows with audit-grade documentation.</p>
+      </div>
+      <div class="customer-card">
+        <div class="customer-type">Regulated Environments</div>
+        <h3>Evaluation built for compliance</h3>
+        <p>Traceable, reproducible methodology designed for high-risk AI system requirements.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENTIATORS -->
+<section class="diff" id="differentiators">
+  <div class="section-inner">
+    <div class="section-label">Why Evidentia</div>
+    <h2 class="section-title">What makes this different from everything else</h2>
+    <div class="diff-row">
+      <div class="diff-item">
+        <div class="accent-line"></div>
+        <h3>Independent by design</h3>
+        <p>We are not owned by or beholden to any AI lab. External validation requires structural independence — the same logic that governs drug trials, financial audit, and product safety certification.</p>
+      </div>
+      <div class="diff-item">
+        <div class="accent-line"></div>
+        <h3>Expert judgment, not crowd preference</h3>
+        <p>Credentialed domain scientists, not annotators or user votes. Our evaluators detect the failures that matter in science.</p>
+      </div>
+      <div class="diff-item">
+        <div class="accent-line"></div>
+        <h3>Reasoning, not recall</h3>
+        <p>We evaluate how models handle complexity, uncertainty, and contested evidence — not whether they can pick the right multiple-choice answer.</p>
+      </div>
+      <div class="diff-item">
+        <div class="accent-line"></div>
+        <h3>Built to compound</h3>
+        <p>The benchmark isn't a snapshot. It's a longitudinal record. The value grows as models evolve and the field moves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-label">Get Involved</div>
+  <h2>We are building the reasoning standard for scientific AI</h2>
+  <p>NeuroBench v1 is our first benchmark. We're working with a small number of partners — AI labs, biotech teams, scientific institutions — to define what rigorous evaluation looks like in practice.</p>
+  <a href="mailto:info@evidentia-labs.com" class="btn-primary" style="display:inline-block">Request Early Access</a>
+</section>
+
+<div class="side-nav" role="navigation" aria-label="Section navigation">
+  <button class="side-dot" data-target="problem" data-label="The Problem" aria-label="The Problem"></button>
+  <button class="side-dot" data-target="why-now" data-label="Why Now" aria-label="Why Now"></button>
+  <button class="side-dot" data-target="failures" data-label="What Models Miss" aria-label="What Models Miss"></button>
+  <button class="side-dot" data-target="platform" data-label="The Solution" aria-label="The Solution"></button>
+  <button class="side-dot" data-target="methodology" data-label="Approach" aria-label="Approach"></button>
+  <button class="side-dot" data-target="who" data-label="Who It's For" aria-label="Who It's For"></button>
+  <button class="side-dot" data-target="differentiators" data-label="Why Evidentia" aria-label="Why Evidentia"></button>
+  <button class="side-dot" data-target="contact" data-label="Get Involved" aria-label="Get Involved"></button>
+</div>
+
+<footer>
+  <span>&copy; 2026 Evidentia Labs. All rights reserved.</span>
+
+</footer>
+
+<script>
+/* ── Theme toggle ── */
+(function(){
+  var toggle = document.getElementById('theme-toggle');
+  function getTheme(){
+    return document.documentElement.getAttribute('data-theme');
+  }
+  toggle.addEventListener('click', function(){
+    var next = getTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+    if(!localStorage.getItem('theme')){
+      document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+    }
+  });
+})();
+
+/* ── Nav section title + side dots ── */
+(function(){
+  var titleEl = document.getElementById('nav-section-title');
+  var sections = document.querySelectorAll('section[id]');
+  var sideDots = document.querySelectorAll('.side-dot');
+  var currentId = '';
+
+  sideDots.forEach(function(dot){
+    dot.addEventListener('click', function(){
+      var target = document.getElementById(dot.dataset.target);
+      if(target) target.scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  function update(){
+    var scrollY = window.scrollY + window.innerHeight / 2;
+    var foundId = '';
+    var foundLabel = '';
+    for(var i = sections.length - 1; i >= 0; i--){
+      if(sections[i].offsetTop <= scrollY){
+        foundId = sections[i].id;
+        var label = sections[i].querySelector('.section-label');
+        foundLabel = label ? label.textContent : '';
+        break;
+      }
+    }
+    if(foundId !== currentId){
+      currentId = foundId;
+      if(foundLabel){
+        titleEl.textContent = foundLabel;
+        titleEl.classList.add('visible');
+      } else {
+        titleEl.classList.remove('visible');
+      }
+      sideDots.forEach(function(d){
+        d.classList.toggle('active', d.dataset.target === foundId);
+      });
+    }
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+
+/* ── Failure card flip ── */
+(function(){
+  var cards = document.querySelectorAll('.failure-card');
+  cards.forEach(function(card){
+    function toggle(){
+      var flipped = card.classList.toggle('flipped');
+      card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+    }
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+    });
+  });
+
+  function equalizeHeights(){
+    var inners = document.querySelectorAll('.failure-inner');
+    inners.forEach(function(el){ el.style.minHeight = ''; });
+    var max = 0;
+    inners.forEach(function(el){ if(el.offsetHeight > max) max = el.offsetHeight; });
+    inners.forEach(function(el){ el.style.minHeight = max + 'px'; });
+  }
+  if(document.readyState === 'complete') equalizeHeights();
+  else window.addEventListener('load', equalizeHeights);
+  var resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(equalizeHeights, 120);
+  });
+})();
+
+/* ── Neural network canvas ── */
+const canvas = document.getElementById('nn-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, dpr;
+const LAYERS = [3, 5, 7, 5, 3, 1];
+let nodes = [];
+let edges = [];
+let time = 0;
+let analysisPulse = { layer: -1, progress: 0, active: false, cooldown: 0 };
+
+const COLORS = {
+  primary: [13, 140, 140],
+  caution: [196, 135, 59],
+  failure: [184, 74, 60],
+};
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  W = rect.width; H = rect.height;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  buildNetwork();
+}
+
+function buildNetwork() {
+  nodes = []; edges = [];
+  const padX = W < 400 ? 30 : 80, padY = W < 400 ? 30 : 50;
+  const usableW = W - padX * 2;
+  const usableH = H - padY * 2;
+  const layerSpacing = usableW / (LAYERS.length - 1);
+
+  LAYERS.forEach((count, li) => {
+    const x = padX + li * layerSpacing;
+    const nodeSpacing = usableH / (count + 1);
+    for (let ni = 0; ni < count; ni++) {
+      const y = padY + nodeSpacing * (ni + 1);
+      nodes.push({
+        x, y, li, ni,
+        baseColor: COLORS.primary,
+        color: COLORS.primary,
+        alpha: .6,
+        radius: li === LAYERS.length - 1 ? 10 : 6,
+        analyzed: false,
+        analyzeTime: 0,
+      });
+    }
+  });
+
+  for (let li = 0; li < LAYERS.length - 1; li++) {
+    const from = nodes.filter(n => n.li === li);
+    const to = nodes.filter(n => n.li === li + 1);
+    from.forEach(f => to.forEach(t => {
+      edges.push({ from: f, to: t, alpha: .08 + Math.random() * .06 });
+    }));
+  }
+}
+
+function triggerAnalysis() {
+  analysisPulse.active = true;
+  analysisPulse.layer = 0;
+  analysisPulse.progress = 0;
+  nodes.forEach(n => { n.analyzed = false; n.analyzeTime = 0; });
+}
+
+function lerpColor(a, b, t) {
+  return [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+  ];
+}
+
+function draw() {
+  time += 0.016;
+  ctx.clearRect(0, 0, W, H);
+
+  if (analysisPulse.active) {
+    analysisPulse.progress += 0.025;
+    if (analysisPulse.progress >= 1) {
+      const li = analysisPulse.layer;
+      nodes.filter(n => n.li === li).forEach(n => {
+        n.analyzed = true;
+        n.analyzeTime = time;
+        const r = Math.random();
+        if (r < .55) n.color = COLORS.primary;
+        else if (r < .85) n.color = COLORS.caution;
+        else n.color = COLORS.failure;
+      });
+      analysisPulse.layer++;
+      analysisPulse.progress = 0;
+      if (analysisPulse.layer >= LAYERS.length) {
+        analysisPulse.active = false;
+        analysisPulse.cooldown = time;
+        const analyzed = nodes.filter(n => n.analyzed && n.li < LAYERS.length - 1);
+        const reds = analyzed.filter(n => n.color[0] > 150 && n.color[1] < 100).length;
+        const ambers = analyzed.filter(n => n.color[1] > 120 && n.color[0] > 150).length;
+        const finalNode = nodes.find(n => n.li === LAYERS.length - 1);
+        if (finalNode) {
+          finalNode.analyzed = true;
+          finalNode.analyzeTime = time;
+          if (reds > analyzed.length * .3) finalNode.color = COLORS.failure;
+          else if (reds + ambers > analyzed.length * .4) finalNode.color = COLORS.caution;
+          else finalNode.color = COLORS.primary;
+        }
+      }
+    }
+  }
+
+  if (!analysisPulse.active && analysisPulse.cooldown > 0 && time - analysisPulse.cooldown > 3) {
+    analysisPulse.cooldown = 0;
+    triggerAnalysis();
+  }
+
+  // Draw edges
+  edges.forEach(e => {
+    const pulse = analysisPulse.active && e.from.li === analysisPulse.layer;
+    const ea = pulse ? .25 : e.alpha;
+    ctx.beginPath();
+    ctx.moveTo(e.from.x, e.from.y);
+    const mx = (e.from.x + e.to.x) / 2;
+    const my = (e.from.y + e.to.y) / 2 + (e.from.ni - e.to.ni) * 3;
+    ctx.quadraticCurveTo(mx, my, e.to.x, e.to.y);
+
+    if (e.from.analyzed) {
+      const c = e.from.color;
+      ctx.strokeStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${ea * 1.5})`;
+    } else {
+      ctx.strokeStyle = `rgba(${COLORS.primary[0]},${COLORS.primary[1]},${COLORS.primary[2]},${ea})`;
+    }
+    ctx.lineWidth = pulse ? 2.5 : 1.5;
+    ctx.stroke();
+  });
+
+  // Draw nodes
+  nodes.forEach(n => {
+    const breathing = Math.sin(time * 1.5 + n.ni * .7 + n.li * 1.2) * .15;
+    const isBeingAnalyzed = analysisPulse.active && n.li === analysisPulse.layer;
+    const r = n.radius + (isBeingAnalyzed ? 3 * Math.sin(time * 8) : 0);
+
+    let col = n.analyzed ? n.color : n.baseColor;
+    let alpha = n.analyzed ? .9 : (.5 + breathing);
+
+    if (isBeingAnalyzed) {
+      const flick = Math.sin(time * 12) * .5 + .5;
+      col = lerpColor(n.baseColor, [255, 255, 255], flick);
+      alpha = 1;
+    }
+
+    // Glow
+    const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 4);
+    glow.addColorStop(0, `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha * .3})`);
+    glow.addColorStop(1, `rgba(${col[0]|0},${col[1]|0},${col[2]|0},0)`);
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r * 4, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    // Core
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha})`;
+    ctx.fill();
+
+    // Ring on analyzed
+    if (n.analyzed) {
+      const ringAlpha = Math.max(0, 1 - (time - n.analyzeTime) * .5);
+      if (ringAlpha > 0) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r + 6 + (time - n.analyzeTime) * 12, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${ringAlpha * .4})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+  });
+
+  // Scanning line
+  if (analysisPulse.active) {
+    const li = analysisPulse.layer;
+    const layerNodes = nodes.filter(n => n.li === li);
+    if (layerNodes.length) {
+      const x = layerNodes[0].x;
+      const grad = ctx.createLinearGradient(x, 0, x, H);
+      const p = analysisPulse.progress;
+      const pc = COLORS.primary;
+      grad.addColorStop(Math.max(0, p - .15), `rgba(${pc[0]},${pc[1]},${pc[2]},0)`);
+      grad.addColorStop(p, `rgba(${pc[0]},${pc[1]},${pc[2]},.25)`);
+      grad.addColorStop(Math.min(1, p + .15), `rgba(${pc[0]},${pc[1]},${pc[2]},0)`);
+      ctx.fillStyle = grad;
+      ctx.fillRect(x - 20, 0, 40, H);
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+window.addEventListener('resize', resize);
+resize();
+triggerAnalysis();
+draw();
+</script>
+</body>
+</html>
