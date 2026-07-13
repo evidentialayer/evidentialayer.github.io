@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Evidentia Labs — Scientific Evaluation for AI</title>
+<title>Evidentia — Scientific Evaluation for AI</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
@@ -582,8 +582,8 @@ footer{
 <nav>
   <div class="nav-left">
     <a href="/" class="logo">
-      <img src="evidentia_labs.svg" alt="Evidentia Labs" class="logo-light">
-      <img src="evidentia_labs_white.svg" alt="Evidentia Labs" class="logo-dark">
+      <img src="evidentia_teal.svg" alt="Evidentia" class="logo-light">
+      <img src="evidentia_white.svg" alt="Evidentia" class="logo-dark">
     </a>
   </div>
   <span id="nav-section-title"></span>
@@ -597,283 +597,17 @@ footer{
 </nav>
 
 <section class="hero">
-  <h1>The <em>trust</em> layer for AI.</h1>
-  <p class="hero-sub">AI models generate confident, fluent answers. <br>We build the benchmarks and the audit trail that test whether the reasoning holds up: under expert scrutiny, under adversarial conditions, under regulatory review.</p>
+  <h1>The <em>reasoning</em> layer for AI.</h1>
+  <p class="hero-sub">We extract the reasoning ontology from Human intelligence and bring it to AI systems.</p>
   <canvas id="nn-canvas"></canvas>
-  <div class="hero-meta">
-    <div class="hero-meta-item">
-      <strong>Independent</strong>
-      Not built by labs
-    </div>
-    <div class="hero-meta-item">
-      <strong>Expert-validated</strong>
-      Domain scientist scoring
-    </div>
-    <div class="hero-meta-item">
-      <strong>Audit-grade</strong>
-      Built for EU AI Act
-    </div>
-  </div>
 </section>
 
-<!-- DATELINE STRIP -->
-<aside class="dateline" aria-label="Regulatory deadline">
-  <div class="dateline-inner">
-    <div class="dateline-date">August 2026</div>
-    <p class="dateline-context">EU AI Act high-risk AI compliance takes effect. Documented, traceable evaluation becomes a legal requirement.</p>
-  </div>
-</aside>
 
-<!-- PROBLEM -->
-<section class="problem" id="problem">
-  <div class="section-inner">
-    <div class="section-label">The Problem</div>
-    <h2 class="section-title">AI in science is bottlenecked by the absence of rigorous evaluation</h2>
-    <p class="section-desc">Models produce fluent, confident, and subtly wrong scientific claims. No trusted standard exists to catch them.</p>
-    <div class="problem-grid">
-      <div class="problem-card">
-        <div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 3-1.5 5-3 6.5V18a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1v-2.5C6.5 14 5 12 5 9a7 7 0 0 1 7-7z"/><line x1="9" y1="22" x2="15" y2="22"/><line x1="10" y1="18" x2="10" y2="22"/><line x1="14" y1="18" x2="14" y2="22"/></svg></div>
-        <h3>Plausible hallucinations</h3>
-        <p>Models generate scientific reasoning that reads well but overstates evidence, flattens disagreement, or relies on outdated consensus.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="5" y1="15" x2="7" y2="13"/><line x1="7" y1="13" x2="11" y2="17"/><line x1="11" y1="17" x2="13" y2="12"/><line x1="13" y1="12" x2="19" y2="19"/></svg></div>
-        <h3>No domain benchmarks</h3>
-        <p>Existing benchmarks test recall and pattern-matching. None evaluate whether a model reasons like a careful scientist under real-world complexity.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><polyline points="21 3 21 9 15 9"/><path d="M21 3l-9 9"/></svg></div>
-        <h3>Self-evaluation doesn't work</h3>
-        <p>AI labs cannot credibly validate their own models for external trust — just as drug developers cannot run their own clinical trials.</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
-        <h3>Regulation is coming</h3>
-        <p>The EU AI Act requires traceability and auditability for high-risk AI systems. The compliance deadline is August 2026.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WHY NOW -->
-<section class="why-now" id="why-now">
-  <div class="section-inner">
-    <div class="section-label">Why Now</div>
-    <h2 class="section-title">Three forces are converging at once</h2>
-    <p class="section-desc">And the infrastructure to handle them doesn't exist yet.</p>
-    <div class="why-now-grid">
-      <div class="why-now-card">
-        <div class="why-now-num">01</div>
-        <h3>AI is being deployed in science</h3>
-        <p>Pharma, biotech, and clinical workflows now run on frontier models. The question is no longer whether they're capable, but whether their reasoning can be trusted in decisions that matter.</p>
-      </div>
-      <div class="why-now-card">
-        <div class="why-now-num">02</div>
-        <h3>Regulation is now law</h3>
-        <p>High-risk AI rules under the EU AI Act take effect August 2026. Documented, traceable evaluation becomes a compliance requirement, not a research preference.</p>
-      </div>
-      <div class="why-now-card">
-        <div class="why-now-num">03</div>
-        <h3>Self-evaluation has run its course</h3>
-        <p>Labs publishing their own benchmark results is no longer sufficient. Every comparable category, e.g. drug trials, credit ratings, financial audit, product safety, eventually required an independent third party.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAILURES -->
-<section class="failures" id="failures">
-  <div class="section-inner">
-    <div class="section-label">What Models Miss</div>
-    <h2 class="section-title">Today's AI models fail at science in ways that are hard to see</h2>
-    <p class="section-desc">These are real failure patterns. The outputs read well. They're still wrong.</p>
-    <div class="failures-grid">
-
-      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
-        <div class="failure-inner">
-          <div class="failure-front">
-            <div class="failure-header">
-              <span class="failure-tag">Failure</span>
-              <span class="failure-type">Correlation treated as causation</span>
-            </div>
-            <div class="failure-model-output">"Increased activity in the motor cortex during the task <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">demonstrates</span> that this region drives the behavior."</div>
-            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
-            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
-          </div>
-          <div class="failure-back">
-            <div class="failure-verdict">Increased activity is correlation. The model skipped the step of testing whether disrupting the region impairs the behavior, the actual test for causal necessity.</div>
-            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
-            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
-          </div>
-        </div>
-      </div>
-        
-      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
-        <div class="failure-inner">
-          <div class="failure-front">
-            <div class="failure-header">
-              <span class="failure-tag">Failure</span>
-              <span class="failure-type">Exaggerated claims</span>
-            </div>
-            <div class="failure-model-output">"Increasing dopamine levels <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">universally improves</span> cognitive performance across all domains through enhanced synaptic plasticity."</div>
-            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
-            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
-          </div>
-          <div class="failure-back">
-            <div class="failure-verdict">A careful scientist would reject this premise. Dopamine effects are nonlinear, circuit-specific, and dose-dependent. Excess dopamine impairs prefrontal function. The model should challenge the claim, not explain it.</div>
-            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
-            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
-        <div class="failure-inner">
-          <div class="failure-front">
-            <div class="failure-header">
-              <span class="failure-tag">Failure</span>
-              <span class="failure-type">Over-simplified statements</span>
-            </div>
-            <div class="failure-model-output">"Parkinsonian bradykinesia <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">is fully explained by</span> reduced direct pathway activity and increased indirect pathway activity following dopamine loss."</div>
-            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
-            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
-          </div>
-          <div class="failure-back">
-            <div class="failure-verdict">This classical framework is useful but incomplete. Current evidence points to heterogeneous cell types, distributed network dynamics, and task-dependent contributions that the model flattens into a textbook summary.</div>
-            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
-            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
-          </div>
-        </div>
-      </div> -->
-
-      <div class="failure-card" role="button" tabindex="0" aria-pressed="false">
-        <div class="failure-inner">
-          <div class="failure-front">
-            <div class="failure-header">
-              <span class="failure-tag">Failure</span>
-              <span class="failure-type">Hallucinated evidence</span>
-            </div>
-            <div class="failure-model-output">"As demonstrated by <span style="color:var(--danger);font-style:italic;text-decoration:underline wavy var(--danger);text-underline-offset:3px">Zhang et al. (2023)</span> in Nature Neuroscience, optogenetic activation of D1-MSNs in the dorsal striatum is sufficient to rescue motor deficits in 6-OHDA lesioned mice."</div>
-            <div class="failure-hint">Click to reveal flaw <span class="failure-hint-arrow" aria-hidden="true">&rarr;</span></div>
-            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
-          </div>
-          <div class="failure-back">
-            <div class="failure-verdict">This paper does not exist. The model fabricated a citation with plausible authors, journal, and methodology to support its argument. No expert reviewer would accept this, but automated evaluation would miss it entirely.</div>
-            <div class="failure-hint"><span class="failure-hint-arrow" aria-hidden="true">&rarr;</span> Click to flip back</div>
-            <div class="failure-corner" aria-hidden="true"><svg viewBox="0 0 58 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path class="curl-void" d="M58 0 L58 46 Q 30 28 12 0 Z"/><path class="curl-flap" d="M12 0 Q 30 28 58 46 Q 40 6 12 0 Z"/></svg></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- PLATFORM -->
-<section id="platform">
-  <div class="section-inner">
-    <div class="section-label">The Solution</div>
-    <h2 class="section-title">Four layers of scientific validation</h2>
-    <p class="section-desc">A vertically integrated system for evaluating, benchmarking, stress-testing, and auditing AI in science.</p>
-    <div class="platform-layers">
-      <div class="layer-card">
-        <div class="layer-number">Layer 01</div>
-        <h3>Expert-Curated Evaluation Datasets</h3>
-        <p>Scientific problems designed by domain experts to test what generic benchmarks miss.</p>
-      </div>
-      <div class="layer-card">
-        <div class="layer-number">Layer 02</div>
-        <h3>Benchmarks built to be cited</h3>
-        <p>Versioned, domain-specific evaluation suites. Quantitative. Comparable across models and over time. Built to cite, not to publish once.</p>
-      </div>
-      <div class="layer-card">
-        <div class="layer-number">Layer 03</div>
-        <h3>Adversarial Scientific Testing</h3>
-        <p>Systematic stress-testing of scientific reasoning under conditions designed to surface failures that matter.</p>
-      </div>
-      <div class="layer-card">
-        <div class="layer-number">Layer 04</div>
-        <h3>Regulatory-Grade Audit Trail</h3>
-        <p>Full provenance, reproducibility, and traceable methodology. Built for high-stakes and regulated environments.</p>
-      </div>
-    </div>
-    <p class="platform-kicker">This is not annotation. It's structured expert judgment under uncertainty — versioned, scored, and auditable.</p>
-  </div>
-</section>
-
-<!-- METHODOLOGY -->
-<section class="methodology" id="methodology">
-  <div class="section-inner">
-    <div class="section-label">Approach</div>
-    <h2 class="section-title">We measure scientific reasoning — not recall, not preference</h2>
-    <div class="methodology-text">
-      <p>Existing benchmarks reward models for producing the right answer. We evaluate <em>how</em> they reason: whether they handle complexity, uncertainty, and contested evidence the way a careful scientist would.</p>
-      <p>Our methodology separates reasoning quality from robustness under adversarial conditions, scored independently by credentialed domain experts using proprietary evaluation frameworks.</p>
-      <p>The benchmark is versioned. Science evolves; the evaluation evolves with it.</p>
-    </div>
-  </div>
-</section>
-
-<!-- WHO IT'S FOR -->
-<section id="who">
-  <div class="section-inner">
-    <div class="section-label">Who It's For</div>
-    <h2 class="section-title">Built for those who need AI to be right, not just fluent</h2>
-    <div class="customers-grid">
-      <div class="customer-card">
-        <div class="customer-type">AI Labs</div>
-        <h3>Find the failure modes your safety team can act on</h3>
-        <p>Independent evaluation and structured failure analysis, designed to surface the reasoning errors that matter — not the ones that look good on a leaderboard.</p>
-      </div>
-      <div class="customer-card">
-        <div class="customer-type">Biotech &amp; Pharma</div>
-        <h3>Validate AI before it touches decisions</h3>
-        <p>Compare and evaluate AI tools for scientific workflows with audit-grade documentation.</p>
-      </div>
-      <div class="customer-card">
-        <div class="customer-type">Regulated Environments</div>
-        <h3>Evaluation built for compliance</h3>
-        <p>Traceable, reproducible methodology designed for high-risk AI system requirements.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- DIFFERENTIATORS -->
-<section class="diff" id="differentiators">
-  <div class="section-inner">
-    <div class="section-label">Why Evidentia</div>
-    <h2 class="section-title">What makes this different from everything else</h2>
-    <div class="diff-row">
-      <div class="diff-item">
-        <div class="accent-line"></div>
-        <h3>Independent by design</h3>
-        <p>We are not owned by or beholden to any AI lab. External validation requires structural independence — the same logic that governs drug trials, financial audit, and product safety certification.</p>
-      </div>
-      <div class="diff-item">
-        <div class="accent-line"></div>
-        <h3>Expert judgment, not crowd preference</h3>
-        <p>Credentialed domain scientists, not annotators or user votes. Our evaluators detect the failures that matter in science.</p>
-      </div>
-      <div class="diff-item">
-        <div class="accent-line"></div>
-        <h3>Reasoning, not recall</h3>
-        <p>We evaluate how models handle complexity, uncertainty, and contested evidence — not whether they can pick the right multiple-choice answer.</p>
-      </div>
-      <div class="diff-item">
-        <div class="accent-line"></div>
-        <h3>Built to compound</h3>
-        <p>The benchmark isn't a snapshot. It's a longitudinal record. The value grows as models evolve and the field moves.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- CTA -->
 <section class="cta-section" id="contact">
   <div class="section-label">Get Involved</div>
-  <h2>We are building the reasoning standard for scientific AI</h2>
-  <p>NeuroBench v1 is our first benchmark. We're working with a small number of partners — AI labs, biotech teams, scientific institutions — to define what rigorous evaluation looks like in practice.</p>
+  <h2>We're building the trust layer for generative reasoning. <br>Let's talk about how we get there together.</h2>
   <a href="mailto:info@evidentia-labs.com" class="btn-primary" style="display:inline-block">Request Early Access</a>
 </section>
 
@@ -889,7 +623,7 @@ footer{
 </div>
 
 <footer>
-  <span>&copy; 2026 Evidentia Labs. All rights reserved.</span>
+  <span>&copy; 2026 Evidentia. All rights reserved.</span>
 
 </footer>
 
