@@ -196,8 +196,7 @@ nav{
 
 /* CANVAS */
 #nn-canvas{
-  width:100%;max-width:900px;height:420px;
-  margin:3.5rem auto 0;
+  width:100%;max-width:900px;height:546px;
   opacity:0;animation:fadeUp 1s .9s forwards;
 }
 
@@ -548,8 +547,9 @@ section{padding:6rem 2rem;position:relative;min-height:100vh;display:flex;flex-d
 
 /* FOOTER */
 footer{
-  padding:2rem 3rem;border-top:1px solid var(--border-color);
-  display:flex;justify-content:space-between;align-items:center;
+  position:absolute;bottom:0;left:0;right:0;
+  padding:2rem 3rem;
+  display:flex;justify-content:center;align-items:center;
   font-size:1rem;color:var(--muted);
 }
 .footer-links{display:flex;gap:1.5rem}
@@ -601,9 +601,9 @@ footer{
 }
 @media(max-width:600px){
   nav{padding:1rem 1rem}
-  .nav-cta{padding:.45rem 1rem;font-size:.85rem}
+  .nav-cta{display:none}
   .platform-layers{grid-template-columns:1fr}
-  #nn-canvas{height:260px}
+  #nn-canvas{height:338px}
   .hero-actions{flex-direction:column;align-items:center}
   .side-nav{display:none}
 }
@@ -643,14 +643,19 @@ footer{
   <span id="nav-section-title"></span>
   <div class="nav-right">
     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-      <span class="icon-sun">&#9788;</span>
-      <span class="icon-moon">&#9790;</span>
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+      </svg>
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
     </button>
     <a href="#contact" class="nav-cta">Request Access</a>
   </div>
 </nav>
 
-<section class="hero">
+<section class="hero" id="home">
   <h1>The <em>reasoning</em> layer for AI.</h1>
   <p class="hero-sub">We extract the reasoning ontology from Human intelligence and bring it to AI systems.</p>
   <canvas id="nn-canvas"></canvas>
@@ -705,23 +710,17 @@ Evidentia determines which ones are causally valid, evidence-backed, and trustwo
   <div class="section-label">Get Involved</div>
   <h2>We're building the trust layer for generative reasoning. <br>Let's talk about how we get there together.</h2>
   <a href="mailto:info@evidentia-labs.com" class="btn-primary" style="display:inline-block">Request Early Access</a>
+  <footer>
+    <span>&copy; 2026 Evidentia. All rights reserved.</span>
+  </footer>
 </section>
 
 <div class="side-nav" role="navigation" aria-label="Section navigation">
+  <button class="side-dot" data-target="home" data-label="Home" aria-label="Home"></button>
   <button class="side-dot" data-target="problem" data-label="The Problem" aria-label="The Problem"></button>
-  <button class="side-dot" data-target="why-now" data-label="Why Now" aria-label="Why Now"></button>
-  <button class="side-dot" data-target="failures" data-label="What Models Miss" aria-label="What Models Miss"></button>
   <button class="side-dot" data-target="platform" data-label="The Solution" aria-label="The Solution"></button>
-  <button class="side-dot" data-target="methodology" data-label="Approach" aria-label="Approach"></button>
-  <button class="side-dot" data-target="who" data-label="Who It's For" aria-label="Who It's For"></button>
-  <button class="side-dot" data-target="differentiators" data-label="Why Evidentia" aria-label="Why Evidentia"></button>
   <button class="side-dot" data-target="contact" data-label="Get Involved" aria-label="Get Involved"></button>
 </div>
-
-<footer>
-  <span>&copy; 2026 Evidentia. All rights reserved.</span>
-
-</footer>
 
 <script>
 /* ── Theme toggle ── */
@@ -964,14 +963,20 @@ function draw() {
       alpha = 1;
     }
 
-    // Glow
-    const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 4);
-    glow.addColorStop(0, `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha * .3})`);
-    glow.addColorStop(1, `rgba(${col[0]|0},${col[1]|0},${col[2]|0},0)`);
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, r * 4, 0, Math.PI * 2);
-    ctx.fillStyle = glow;
-    ctx.fill();
+    const isRed = n.analyzed && n.color === COLORS.failure;
+    const isYellow = n.analyzed && n.color === COLORS.caution;
+
+    // Glow (blurred disc) — only red and yellow nodes; smaller on yellow
+    if (isRed || isYellow) {
+      const glowR = r * (isYellow ? 2.4 : 4);
+      const glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, glowR);
+      glow.addColorStop(0, `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha * .3})`);
+      glow.addColorStop(1, `rgba(${col[0]|0},${col[1]|0},${col[2]|0},0)`);
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, glowR, 0, Math.PI * 2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+    }
 
     // Core
     ctx.beginPath();
@@ -979,8 +984,8 @@ function draw() {
     ctx.fillStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha})`;
     ctx.fill();
 
-    // Ring on analyzed
-    if (n.analyzed) {
+    // Ring (ripple) — only red nodes
+    if (isRed) {
       const ringAlpha = Math.max(0, 1 - (time - n.analyzeTime) * .5);
       if (ringAlpha > 0) {
         ctx.beginPath();
@@ -1000,7 +1005,7 @@ function draw() {
       const x = layerNodes[0].x;
       const grad = ctx.createLinearGradient(x, 0, x, H);
       const p = analysisPulse.progress;
-      const pc = COLORS.primary;
+      const pc = [100, 100, 150];
       grad.addColorStop(Math.max(0, p - .15), `rgba(${pc[0]},${pc[1]},${pc[2]},0)`);
       grad.addColorStop(p, `rgba(${pc[0]},${pc[1]},${pc[2]},.25)`);
       grad.addColorStop(Math.min(1, p + .15), `rgba(${pc[0]},${pc[1]},${pc[2]},0)`);
