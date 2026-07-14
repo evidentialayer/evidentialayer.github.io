@@ -163,6 +163,7 @@ nav{
   font-weight:400;
   opacity:0;animation:fadeUp .8s .5s forwards;
 }
+.hero-sub .hl{color:var(--accent)}
 .hero-actions{
   display:flex;gap:1rem;margin-top:2.5rem;
   opacity:0;animation:fadeUp .8s .65s forwards;
@@ -272,33 +273,20 @@ section{padding:6rem 2rem;position:relative;min-height:100vh;display:flex;flex-d
 .solution-statement em{font-style:italic;color:var(--accent)}
 .solution-flow{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 130px minmax(0,1.25fr);
+  grid-template-columns:minmax(0,1fr) 130px minmax(0,1fr);
   align-items:center;gap:2.5rem;
   margin-top:3.5rem;max-width:1000px;
 }
-.solution-intro{
+.solution-step{
   font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.65;
-  color:var(--fg);font-weight:400;max-width:340px;
-}
-.solution-intro .hl{color:var(--accent)}
-.solution-branch{align-self:stretch;display:flex;align-items:center;justify-content:center}
-.solution-branch svg{width:100%;height:200px;overflow:visible}
-.solution-outputs{display:flex;flex-direction:column;gap:2.5rem}
-.solution-output{display:flex;gap:1rem}
-.output-num{
-  font-family:'Instrument Serif',serif;font-size:1.3rem;
-  color:var(--fg);flex-shrink:0;line-height:1.4;
-}
-.solution-output p{
-  font-size:clamp(1rem,1.3vw,1.15rem);line-height:1.6;
   color:var(--fg);font-weight:400;
 }
-.solution-output .hl{color:var(--accent)}
-.solution-output .hl-strong{color:var(--accent);font-weight:600}
+.solution-arrow{align-self:center;display:flex;align-items:center;justify-content:center}
+.solution-arrow svg{width:100%;height:40px;overflow:visible}
+.hl-strong{color:var(--accent);font-weight:600}
 @media(max-width:820px){
   .solution-flow{grid-template-columns:1fr;gap:1.75rem}
-  .solution-intro{max-width:none}
-  .solution-branch{display:none}
+  .solution-arrow svg{height:48px;transform:rotate(90deg)}
 }
 
 /* FAILURES */
@@ -659,8 +647,8 @@ footer{
   <h1>The <em>reasoning</em> layer for AI.</h1>
   <p class="hero-sub">We extract the reasoning ontology from Human intelligence and bring it to AI systems.</p>
   <canvas id="nn-canvas"></canvas>
-  <p class="hero-sub">AI can generate thousands of plausible scientific hypothesis.
-Evidentia determines which ones are causally valid, evidence-backed, and trustworthy enough to act on.</p>
+  <p class="hero-sub">AI can generate thousands of <span class="hl">plausible scientific hypothesis</span>.
+Evidentia determines which ones are causally valid, evidence-backed, and <span class="hl">trustworthy to act on</span>.</p>
 </section>
 
 <!-- PROBLEM -->
@@ -679,28 +667,18 @@ Evidentia determines which ones are causally valid, evidence-backed, and trustwo
     <div class="section-label">The Solution</div>
     <h2 class="solution-statement">The <em>reasoning layer</em> that sits between frontier models and <em>high-stakes decisions</em>.</h2>
     <div class="solution-flow">
-      <p class="solution-intro">We uncover the <span class="hl">latent constraints</span> experts use to evaluate reasoning &amp; distill those into <span class="hl">two outputs</span>:</p>
-      <div class="solution-branch" aria-hidden="true">
-        <svg viewBox="0 0 130 200" preserveAspectRatio="xMidYMid meet">
+      <p class="solution-step">Extract the <span class="hl-strong">taxonomy of reasoning operations</span> that experts and formalisms of reasoning define.</p>
+      <div class="solution-arrow" aria-hidden="true">
+        <svg viewBox="0 0 130 40" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <marker id="branch-arrow" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+            <marker id="flow-arrow" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
               <path d="M0,0 L6.5,3 L0,6 Z" fill="var(--accent)"/>
             </marker>
           </defs>
-          <path d="M2,100 C55,100 60,38 120,34" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#branch-arrow)"/>
-          <path d="M2,100 C55,100 60,162 120,166" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#branch-arrow)"/>
+          <path d="M2,20 L118,20" stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#flow-arrow)"/>
         </svg>
       </div>
-      <div class="solution-outputs">
-        <div class="solution-output">
-          <span class="output-num">1)</span>
-          <p><span class="hl-strong">Teaching models.</span> These models are used to supervise and improve the reasoning of <span class="hl">frontier AI models</span>.</p>
-        </div>
-        <div class="solution-output">
-          <span class="output-num">2)</span>
-          <p><span class="hl-strong">Reasoning companion.</span> This layer is able to evaluate and improve the reasoning of the AI models for <span class="hl">the user</span>.</p>
-        </div>
-      </div>
+      <p class="solution-step">Build a <span class="hl-strong">multi-dimensional framework</span> by which reasoning traces can <span class="hl-strong">teach or correct</span> frontier models.</p>
     </div>
   </div>
 </section>
